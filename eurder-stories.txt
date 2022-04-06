@@ -1,0 +1,123 @@
+eurder-stories analysis
+
+Story 1 - Create a customer account (MUST-HAVE)
+	instance variables: --> Customer.java (+ CreateCustomerDTO & Mapper)
+		-String id (UUID, for repository purposes)
+		-String firstName
+		-String lastName
+		-String email
+		-String address
+		-String phoneNumber
+	
+	endpoint: POST customers
+	comments: cover edge cases, use regex for email
+	estimation: large
+	test:
+		-account is created correctly
+		-tests for edge cases
+		-(if time: address is created correctly)
+		
+		
+Story 2 - Add an item (MUST-HAVE)
+	instance variables: --> Item.java (+ CreateItemDTO & Mapper)
+		-String id (UUID, for repository purposes)
+		-String name
+		-String description
+		-double price
+		-int amount
+		
+	endpoint: POST items
+	comments: cover edge cases
+	estimation: medium
+	test:
+		-item is created correctly
+		-tests for edge cases
+		
+Story 3 - Order items (MUST-HAVE)
+	instance variables: --> Order.java (+ CreateOrderDTO & Mapper)
+		-String id (UUID, for repository purposes)
+		-List<ItemGroup> itemGroupList
+		
+	instance variables: --> ItemGroup.java
+		-String itemId
+		-int amount
+		-double pricePerUnit
+		-LocalDate shippingDate
+		
+	instance variables: OrderLine.java
+		-String orderLineId (UUID, for repository purposes)
+		-String customerId
+		-String orderId
+		
+	method: calculateTotalPrice()
+	endpoint: POST orders
+	comments: shipping date: +1 day if in stock, +7 days if out of stock
+	estimation: very large
+	test:
+		-create item group correctly
+		-create order line correctly
+		-create order correctly
+		-cover edge cases
+	
+Story 4: update an item (NICE-TO-HAVE)
+	instance variables: no new one needed
+	
+	endpoint: PUT item/{id}
+	comments: cover edge cases
+	estimation: medium
+	tests:
+		-update item successfully
+		-cover edge cases
+		
+Story 5: view report of orders (NICE-TO-HAVE)
+	instance variables: no new ones needed
+	
+	method: generateReport() in OrderLine class?
+	endpoint: GET orders/{customerId}
+	comments: -
+	estimation: medium
+	tests: 
+		-see if newly created method works correctly
+		-think about edge cases
+		
+Story 6: reorder an existing order (NICE-TO-HAVE)
+	instance variables: no new ones needed
+	
+	endpoint: POST orders/{customerId}/orders/{orderId}?reorder=true
+	comments: recalculate price if needed
+	estimation: small
+	tests:
+		-see if reorder works successfully
+	
+Story 7: view all customers (MUST-HAVE)
+	instance variables: no new ones needed
+	
+	endpoint: GET customers
+	comments: implement security if time available
+	estimation: small
+	tests:
+		-test if get method works correctly
+		
+Story 8: view a single customer (MUST-HAVE)
+	instance variables: no new ones needed
+	
+	endpoint: GET customers/{customerId}
+	comments: implement security if time available
+	estimation: small
+	tests:
+		-test if get method works correctly
+		
+Story 9: items shipping today (NICE-TO-HAVE)
+	instance variables: --> ShipTodayDTO.java
+		-List<ItemGroup> itemGroupsToShipToday
+		-String Address
+	
+	endpoint: GET orders?shippingDate=LocalDate.now()
+	comments: item groups of the same order can have a different shipping date, but all items are shipped to the same address.
+	estimation: medium
+	tests:
+		-test if get method works correctly
+		
+Story 10: item overview (NICE-TO-HAVE)
+	....
+	
