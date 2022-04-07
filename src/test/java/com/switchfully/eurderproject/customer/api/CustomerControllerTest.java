@@ -18,7 +18,7 @@ class CustomerControllerTest {
     private int port;
 
     @Test
-    void createMovie_givenAMovieToCreate_thenTheNewlyCreatedMovieIsSavedAndReturned() {
+    void createCustomer_givenACustomerToCreate_thenTheNewlyCreatedCustomerIsSavedAndReturned() {
         CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
                 .setFirstName("John")
                 .setLastName("McClane")
@@ -47,6 +47,27 @@ class CustomerControllerTest {
         Assertions.assertThat(customerDTO.getEmail()).isEqualTo(createCustomerDTO.getEmail());
         Assertions.assertThat(customerDTO.getAddress()).isEqualTo(createCustomerDTO.getAddress());
         Assertions.assertThat(customerDTO.getPhoneNumber()).isEqualTo(createCustomerDTO.getPhoneNumber());
+    }
+
+    @Test
+    void createCustomer_givenACustomerWithoutFirstName_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setLastName("McClane")
+                .setEmail("john.mcclane@diehard.com")
+                .setAddress("Hero Street, 26000 USA")
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                        .given()
+                        .port(port)
+                        .body(createCustomerDTO)
+                        .contentType(JSON)
+                        .when()
+                        .accept(JSON)
+                        .post("/customers")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
 }
