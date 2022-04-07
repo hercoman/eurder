@@ -23,14 +23,13 @@ public class CustomerService {
     }
 
     public CustomerDTO createCustomer(CreateCustomerDTO createCustomerDTO) {
-        boolean emailExists = customerRepository.assertUniqueEmailAddress(createCustomerDTO.getEmail());
-        validateAndCheckLoggingMessage(emailExists);
+        assertEmailIsUnique(customerRepository.isEmailUnique(createCustomerDTO.getEmail()));
         Customer customer = customerMapper.toCustomer(createCustomerDTO);
         customerRepository.save(customer);
         return customerMapper.toDTO(customer);
     }
 
-    private void validateAndCheckLoggingMessage(boolean condition) {
+    private void assertEmailIsUnique(boolean condition) {
         if (condition) {
             serviceLogger.error("Attempted to create customer with already existing e-mail address");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to use given e-mail address for new customer's email address");
