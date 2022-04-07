@@ -16,4 +16,9 @@ public class ItemRepository {
     public void save(Item item) {
         itemsById.put(item.getId(), item);
     }
+
+    public boolean isNameUnique(String name) {
+        return itemsById.values().stream()
+        .anyMatch(customer -> customer.getName().equalsIgnoreCase(name));
+    }
 }
