@@ -1,8 +1,13 @@
 package com.switchfully.eurderproject.item.api;
 
+import com.switchfully.eurderproject.customer.api.CreateCustomerDTO;
+import com.switchfully.eurderproject.customer.domain.Customer;
+import com.switchfully.eurderproject.item.domain.Item;
+import com.switchfully.eurderproject.item.domain.ItemRepository;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -16,6 +21,9 @@ class ItemControllerTest {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
     @Test
     void createItem_givenItemToCreate_thenTheNewlyCreatedItemIsSavedAndReturned() {
@@ -50,6 +58,30 @@ class ItemControllerTest {
     @Test
     void createItem_givenItemWithoutName_thenGetHttpStatusBadRequest() {
         CreateItemDTO createItemDTO = new CreateItemDTO()
+                .setDescription("A clean, round tomato with lots of vitamins")
+                .setPrice(0.125)
+                .setAmountAvailable(10);
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createItemDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/items")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void createItem_givenItemWithExistingName_thenGetHttpStatusBadRequest() {
+        Item repoItem = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
+        itemRepository.save(repoItem);
+
+        CreateItemDTO createItemDTO = new CreateItemDTO()
+                .setName("Tomato")
                 .setDescription("A clean, round tomato with lots of vitamins")
                 .setPrice(0.125)
                 .setAmountAvailable(10);
