@@ -1,21 +1,12 @@
 package com.switchfully.eurderproject.customer.api;
 
 public class CustomerDTO {
-    private final String id;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
-    private final String address;
-    private final String phoneNumber;
-
-    public CustomerDTO(String id, String firstName, String lastName, String email, String address, String phoneNumber) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-    }
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String address;
+    private String phoneNumber;
 
     public String getId() {
         return id;
@@ -39,5 +30,35 @@ public class CustomerDTO {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public CustomerDTO setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public CustomerDTO setFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public CustomerDTO setLastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public CustomerDTO setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public CustomerDTO setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public CustomerDTO setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+        return this;
     }
 }

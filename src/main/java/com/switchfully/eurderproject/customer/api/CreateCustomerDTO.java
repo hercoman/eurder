@@ -16,18 +16,22 @@ public class CreateCustomerDTO {
     }
 
     public CreateCustomerDTO setLastName(String lastName) {
+        this.lastName = lastName;
         return this;
     }
 
     public CreateCustomerDTO setEmail(String email) {
+        this.email = email;
         return this;
     }
 
     public CreateCustomerDTO setAddress(String address) {
+        this.address = address;
         return this;
     }
 
     public CreateCustomerDTO setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
         return this;
     }
 
