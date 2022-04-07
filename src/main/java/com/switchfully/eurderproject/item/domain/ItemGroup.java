@@ -19,7 +19,7 @@ public class ItemGroup {
     public ItemGroup(int amount, double pricePerUnit, LocalDate shippingDate) {
         this.id = UUID.randomUUID().toString();
         this.amount = validateAmount(amount);
-        this.pricePerUnit = pricePerUnit;
+        this.pricePerUnit = validatePricePerUnit(pricePerUnit);
         this.shippingDate = shippingDate;
     }
 
@@ -30,6 +30,15 @@ public class ItemGroup {
                 "Unable to create item group with negative amount",
                 "Successfully validated new item group amount");
         return amount;
+    }
+
+    private double validatePricePerUnit(double pricePerUnit) {
+        validateAndCheckLoggingMessage(
+                (pricePerUnit < 0),
+                "Negative price per unit input for item group",
+                "Unable to create item group with negative price per unit",
+                "Successfully validated new item group price per unit");
+        return pricePerUnit;
     }
 
     public String getId() {
