@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class Customer {
-    private final Logger serviceLogger = LoggerFactory.getLogger(Customer.class);
+    private final Logger customerLogger = LoggerFactory.getLogger(Customer.class);
 
     private final String id;
     private final String firstName;
@@ -26,7 +26,7 @@ public class Customer {
         this.email = validateEmail(email);
         this.address = validateAddress(address);
         this.phoneNumber = validatePhoneNumber(phoneNumber);
-        serviceLogger.info("Successfully created new customer");
+        customerLogger.info("Successfully created new customer");
     }
 
     private String validateFirstName(String firstName) {
@@ -51,7 +51,7 @@ public class Customer {
         validateAndCheckLoggingMessage(
                 !isEmailFormValid(email),
                 "Attempted to create customer with incorrect e-mail address format",
-                "incorrect format given for new customer's email address",
+                "Incorrect format given for new customer's email address",
                 "Successfully validated new customer's email address");
         return email;
     }
@@ -76,10 +76,10 @@ public class Customer {
 
     private void validateAndCheckLoggingMessage(boolean condition, String loggerErrorMessage, String jsonErrorMessage, String confirmationMessage) {
         if (condition) {
-            serviceLogger.error(loggerErrorMessage);
+            customerLogger.error(loggerErrorMessage);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, jsonErrorMessage);
         }
-        serviceLogger.info(confirmationMessage);
+        customerLogger.info(confirmationMessage);
     }
 
     private boolean notFilledIn(String string) {
