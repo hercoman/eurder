@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 
@@ -41,5 +42,31 @@ class ItemGroupTest {
         Assertions.assertThat(itemGroup.getAmount()).isEqualTo(5);
         Assertions.assertThat(itemGroup.getPricePerUnit()).isEqualTo(0.125);
         Assertions.assertThat(itemGroup.getShippingDate()).isEqualTo(LocalDate.now().plusDays(1));
+    }
+
+    @Test
+    void createItemGroup_givenAnItemGroupWithNegativeAmount_thenGetHttpStatusBadRequest() {
+        Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
+        itemRepository.save(item);
+        ItemGroupDTO itemGroupDTO = new ItemGroupDTO()
+                .setItemId(item.getId())
+                .setAmount(-5);
+
+        Assertions.assertThatThrownBy(() -> itemMapper.toItemGroup(itemGroupDTO))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Unable to create item group with negative amount");
+    }
+
+    @Test
+    void createItemGroup_givenAnItemGroupWithNonExistingId_thenGetHttpStatusBadRequest() {
+        Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
+        itemRepository.save(item);
+        ItemGroupDTO itemGroupDTO = new ItemGroupDTO()
+                .setItemId("derp")
+                .setAmount(5);
+
+        Assertions.assertThatThrownBy(() -> itemMapper.toItemGroup(itemGroupDTO))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("No item found for id derp");
     }
 }
