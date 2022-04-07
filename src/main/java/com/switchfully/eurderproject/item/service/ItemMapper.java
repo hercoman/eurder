@@ -49,7 +49,7 @@ public class ItemMapper {
     }
 
     private LocalDate calculateShippingDate(ItemGroupDTO itemGroupDTO, int amountAvailable) {
-        if (itemGroupDTO.getAmount() > amountAvailable) {
+        if (itemGroupDTO.getAmount() < amountAvailable) {
             return LocalDate.now().plusDays(1);
         }
         return LocalDate.now().plusDays(7);
