@@ -1,9 +1,15 @@
 package com.switchfully.eurderproject.customer.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Objects;
 import java.util.UUID;
 
 public class Customer {
+    private final Logger logger = LoggerFactory.getLogger(Customer.class);
     private final String id;
     private final String firstName;
     private final String lastName;
@@ -13,11 +19,20 @@ public class Customer {
 
     public Customer(String firstName, String lastName, String email, String address, String phoneNumber) {
         this.id = UUID.randomUUID().toString();
-        this.firstName = firstName;
+        this.firstName = validateFirstName(firstName);
         this.lastName = lastName;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    private String validateFirstName(String firstName) {
+        if (firstName == null ||firstName.isEmpty()) {
+            logger.error("Customer can't be created without first name");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No first name given for new customer");
+        }
+        logger.info("Successfully validated new customer's first name");
+        return firstName;
     }
 
     public String getId() {
