@@ -1,20 +1,21 @@
 package com.switchfully.eurderproject.order.api;
 
-import com.switchfully.eurderproject.item.domain.ItemGroup;
+import com.switchfully.eurderproject.item.api.ItemGroupDTO;
 
 import java.util.List;
 
 public class CreateOrderDTO {
     private String customerId;
-    private List<ItemGroup> itemGroupList;
+    private List<ItemGroupDTO> itemGroupDTOList;
+
 
     public CreateOrderDTO setCustomerId(String customerId) {
         this.customerId = customerId;
         return this;
     }
 
-    public CreateOrderDTO setItemGroupList(List<ItemGroup> itemGroupList) {
-        this.itemGroupList = itemGroupList;
+    public CreateOrderDTO setItemGroupDTOList(List<ItemGroupDTO> itemGroupDTOList) {
+        this.itemGroupDTOList = itemGroupDTOList;
         return this;
     }
 
@@ -22,7 +23,7 @@ public class CreateOrderDTO {
         return customerId;
     }
 
-    public List<ItemGroup> getItemGroupList() {
-        return itemGroupList;
+    public List<ItemGroupDTO> getItemGroupDTOList() {
+        return itemGroupDTOList;
     }
 }

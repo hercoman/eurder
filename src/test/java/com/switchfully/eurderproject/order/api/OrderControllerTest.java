@@ -36,19 +36,21 @@ class OrderControllerTest {
     private ItemMapper itemMapper;
 
     @Test
-    void addItemToOrder_givenItemToSaveInOrder_thenItemGroupIscreatedCorrectly() {
+    void createOrder_givenOrderToSave_thenOrderIsCreatedAndSavedCorrectly() {
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
         Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
-        ItemGroupDTO expectedItemGroupDTO = new ItemGroupDTO()
+
+        ItemGroupDTO itemGroupDTO1 = new ItemGroupDTO()
                 .setItemId(item.getId())
                 .setAmount(5);
-        ItemGroup expectedItemGroup = itemMapper.toItemGroup(expectedItemGroupDTO);
-        List<ItemGroup> itemGroupList = Lists.newArrayList(expectedItemGroup);
+        ItemGroup itemGroup1 = itemMapper.toItemGroup(itemGroupDTO1);
+
+        List<ItemGroupDTO> itemGroupDTOList = Lists.newArrayList(itemGroupDTO1);
 
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
                 .setCustomerId(customer.getId())
-                .setItemGroupList(itemGroupList);
+                .setItemGroupDTOList(itemGroupDTOList);
 
         OrderDTO orderDTO =
                 RestAssured
@@ -65,8 +67,10 @@ class OrderControllerTest {
                         .extract()
                         .as(OrderDTO.class);
 
+        String expectedCustomerId = customer.getId();
+        List<ItemGroup> expectedItemGroupList = Lists.newArrayList(itemGroup1);
         Assertions.assertThat(orderDTO.getId()).isNotBlank();
-        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customer.getId());
-        Assertions.assertThat(orderDTO.getItemGroupList()).isEqualTo(itemGroupList);
+        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(expectedCustomerId);
+        Assertions.assertThat(orderDTO.getItemGroupList()).isEqualTo(expectedItemGroupList);
     }
 }

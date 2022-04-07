@@ -13,7 +13,5 @@ public class OrderRepository {
         this.ordersById = new HashMap<>();
     }
 
-    public void save(Order order) {
-        ordersById.put(order.getId(), order);
-    }
+
 }
