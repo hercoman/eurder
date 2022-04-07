@@ -1,5 +1,7 @@
 package com.switchfully.eurderproject.item.api;
 
+import java.util.Objects;
+
 public class ItemDTO {
     private String id;
     private String name;
@@ -49,5 +51,18 @@ public class ItemDTO {
 
     public int getAmountAvailable() {
         return amountAvailable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemDTO itemDTO = (ItemDTO) o;
+        return Objects.equals(id, itemDTO.id) && Objects.equals(name, itemDTO.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }
