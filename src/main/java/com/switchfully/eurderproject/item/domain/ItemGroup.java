@@ -80,4 +80,15 @@ public class ItemGroup {
     public int hashCode() {
         return Objects.hash(id, itemId, amount);
     }
+
+    @Override
+    public String toString() {
+        return "ItemGroup{" +
+                "id='" + id + '\'' +
+                ", itemId='" + itemId + '\'' +
+                ", amount=" + amount +
+                ", pricePerUnit=" + pricePerUnit +
+                ", shippingDate=" + shippingDate +
+                '}';
+    }
 }
