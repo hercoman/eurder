@@ -36,6 +36,7 @@ Story 2 - Add an item (MUST-HAVE)
 Story 3 - Order items (MUST-HAVE)
 	instance variables: --> Order.java (+ CreateOrderDTO & Mapper)
 		-String id (UUID, for repository purposes)
+		-String customerId
 		-List<ItemGroup> itemGroupList
 		
 	instance variables: --> ItemGroup.java
@@ -43,11 +44,6 @@ Story 3 - Order items (MUST-HAVE)
 		-int amount
 		-double pricePerUnit
 		-LocalDate shippingDate
-		
-	instance variables: OrderLine.java
-		-String orderLineId (UUID, for repository purposes)
-		-String customerId
-		-String orderId
 		
 	method: calculateTotalPrice()
 	endpoint: POST orders
