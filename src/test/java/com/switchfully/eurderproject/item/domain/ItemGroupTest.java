@@ -39,6 +39,6 @@ class ItemGroupTest {
     void createItemGroup_givenAnItemGroupWithNegativeAmount_thenThrowResponseStatusException() {
         Assertions.assertThatThrownBy(() -> new ItemGroup(-10, 0.125, LocalDate.now().plusDays(1)))
                 .isInstanceOf(ResponseStatusException.class)
-                .hasMessage("Unable to create item group with negative amount");
+                .hasMessageContaining("Unable to create item group with negative amount");
     }
 }
