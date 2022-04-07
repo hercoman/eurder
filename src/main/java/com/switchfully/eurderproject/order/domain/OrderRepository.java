@@ -14,4 +14,7 @@ public class OrderRepository {
     }
 
 
+    public void save(Order order) {
+        ordersById.put(order.getId(), order);
+    }
 }

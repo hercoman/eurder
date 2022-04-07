@@ -37,6 +37,7 @@ class OrderControllerTest {
 
     @Test
     void createOrder_givenOrderToSave_thenOrderIsCreatedAndSavedCorrectly() {
+        // GIVEN
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
         Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
@@ -48,6 +49,7 @@ class OrderControllerTest {
 
         List<ItemGroupDTO> itemGroupDTOList = Lists.newArrayList(itemGroupDTO1);
 
+        //WHEN
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
                 .setCustomerId(customer.getId())
                 .setItemGroupDTOList(itemGroupDTOList);

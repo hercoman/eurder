@@ -9,6 +9,9 @@ import com.switchfully.eurderproject.item.domain.ItemRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ItemMapper {
@@ -42,7 +45,7 @@ public class ItemMapper {
         int amountAvailable = itemRepository.getItemById(itemId).getAmountAvailable();
         LocalDate shippingDate = calculateShippingDate(itemGroupDTO, amountAvailable);
         return new ItemGroup(
-                itemGroupDTO.getItemId(),
+                itemId,
                 itemGroupDTO.getAmount(),
                 orderPricePerUnit,
                 shippingDate);
@@ -53,5 +56,11 @@ public class ItemMapper {
             return LocalDate.now().plusDays(1);
         }
         return LocalDate.now().plusDays(7);
+    }
+
+    public List<ItemGroup> toItemGroup(Collection<ItemGroupDTO> itemGroupDTOCollection) {
+        return itemGroupDTOCollection.stream()
+                .map(this::toItemGroup)
+                .collect(Collectors.toList());
     }
 }

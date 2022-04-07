@@ -18,8 +18,10 @@ public class ItemGroupRepository {
     public ItemGroupRepository() {
         this.itemGroupById = new HashMap<>();
     }
-    public void save(ItemGroup itemGroup) {
+
+    public ItemGroup save(ItemGroup itemGroup) {
         itemGroupById.put(itemGroup.getId(), itemGroup);
+        return itemGroup;
     }
 
     public ItemGroup getById(String itemGroupId) {

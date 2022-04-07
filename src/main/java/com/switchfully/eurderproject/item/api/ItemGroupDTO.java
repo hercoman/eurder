@@ -21,4 +21,12 @@ public class ItemGroupDTO {
     public int getAmount() {
         return amount;
     }
+
+    @Override
+    public String toString() {
+        return "ItemGroupDTO{" +
+                "itemId='" + itemId + '\'' +
+                ", amount=" + amount +
+                '}';
+    }
 }
