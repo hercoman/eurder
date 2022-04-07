@@ -1,8 +1,5 @@
 package com.switchfully.eurderproject.customer.api;
 
-import io.swagger.v3.oas.models.info.Contact;
-import org.springframework.boot.web.server.ConfigurableWebServerFactory;
-
 public class CreateCustomerDTO {
     private String firstName;
     private String lastName;

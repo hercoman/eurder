@@ -1,7 +1,5 @@
 package com.switchfully.eurderproject.item.service;
 
-import com.switchfully.eurderproject.customer.api.CustomerDTO;
-import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.item.api.CreateItemDTO;
 import com.switchfully.eurderproject.item.api.ItemDTO;
 import com.switchfully.eurderproject.item.domain.Item;

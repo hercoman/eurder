@@ -1,7 +1,5 @@
 package com.switchfully.eurderproject.item.api;
 
-import com.switchfully.eurderproject.customer.api.CreateCustomerDTO;
-
 public class CreateItemDTO {
     private String name;
     private String description;
