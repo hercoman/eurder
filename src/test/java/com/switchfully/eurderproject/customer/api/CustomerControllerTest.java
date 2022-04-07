@@ -1,8 +1,11 @@
 package com.switchfully.eurderproject.customer.api;
 
+import com.switchfully.eurderproject.customer.domain.Customer;
+import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,9 @@ class CustomerControllerTest {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Test
     void createCustomer_givenACustomerToCreate_thenTheNewlyCreatedCustomerIsSavedAndReturned() {
@@ -97,6 +103,30 @@ class CustomerControllerTest {
                 .setFirstName("John")
                 .setLastName("McClane")
                 .setEmail("john.mcclane.diehard.com")
+                .setAddress("Hero Street, 26000 USA")
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void createCustomer_givenACustomerWithExistingEmail_thenGetHttpStatusBadRequest() {
+        Customer repoCustomer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
+        customerRepository.save(repoCustomer);
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setLastName("McClane")
+                .setEmail("john.mcclane@diehard.com")
                 .setAddress("Hero Street, 26000 USA")
                 .setPhoneNumber("0800-999");
 
