@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.time.LocalDate;
@@ -32,5 +33,12 @@ class ItemGroupTest {
         Assertions.assertThat(itemGroup.getAmount()).isEqualTo(10);
         Assertions.assertThat(itemGroup.getPricePerUnit()).isEqualTo(0.125);
         Assertions.assertThat(itemGroup.getShippingDate()).isEqualTo(LocalDate.now().plusDays(1));
+    }
+
+    @Test
+    void createItemGroup_givenAnItemGroupWithNegativeAmount_thenThrowResponseStatusException() {
+        Assertions.assertThatThrownBy(() -> new ItemGroup(-10, 0.125, LocalDate.now().plusDays(1)))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessage("Unable to create item group with negative amount");
     }
 }

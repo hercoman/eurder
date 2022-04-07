@@ -26,7 +26,7 @@ public class ItemGroupRepository {
         ItemGroup foundItemGroup = itemGroupById.get(itemGroupId);
         if(foundItemGroup == null) {
             repositoryLogger.error("No item group could be found for id " + itemGroupId);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No item group could be found for id " + itemGroupId);
         }
         return foundItemGroup ;
     }
