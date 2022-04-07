@@ -109,52 +109,12 @@ class ItemControllerTest {
     }
 
     @Test
-    void createItem_givenItemWithoutPrice_thenGetHttpStatusBadRequest() {
-        CreateItemDTO createItemDTO = new CreateItemDTO()
-                .setName("Tomato")
-                .setDescription("A clean, round tomato with lots of vitamins")
-                .setAmountAvailable(10);
-
-        RestAssured
-                .given()
-                .port(port)
-                .body(createItemDTO)
-                .contentType(JSON)
-                .when()
-                .accept(JSON)
-                .post("/items")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
     void createItem_givenItemWithNegativeAmountAvailable_thenGetHttpStatusBadRequest() {
         CreateItemDTO createItemDTO = new CreateItemDTO()
                 .setName("Tomato")
                 .setDescription("A clean, round tomato with lots of vitamins")
                 .setPrice(0.125)
                 .setAmountAvailable(-10);
-
-        RestAssured
-                .given()
-                .port(port)
-                .body(createItemDTO)
-                .contentType(JSON)
-                .when()
-                .accept(JSON)
-                .post("/items")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
-    void createItem_givenItemWithoutAmountAvailable_thenGetHttpStatusBadRequest() {
-        CreateItemDTO createItemDTO = new CreateItemDTO()
-                .setName("Tomato")
-                .setDescription("A clean, round tomato with lots of vitamins")
-                .setPrice(0.125);
 
         RestAssured
                 .given()
