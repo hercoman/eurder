@@ -70,4 +70,89 @@ class CustomerControllerTest {
                         .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @Test
+    void createCustomer_givenACustomerWithoutLastName_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setEmail("john.mcclane@diehard.com")
+                .setAddress("Hero Street, 26000 USA")
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void createCustomer_givenACustomerWithIncorrectEmail_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setLastName("McClane")
+                .setEmail("john.mcclane.diehard.com")
+                .setAddress("Hero Street, 26000 USA")
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void createCustomer_givenACustomerWithoutAddress_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setLastName("McClane")
+                .setEmail("john.mcclane@diehard.com")
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void createCustomer_givenACustomerWithoutPhoneNumber_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setLastName("McClane")
+                .setEmail("john.mcclane@diehard.com")
+                .setAddress("Hero Street, 26000 USA");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
 }
