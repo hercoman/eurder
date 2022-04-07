@@ -1,7 +1,5 @@
 package com.switchfully.eurderproject.item.api;
 
-import com.switchfully.eurderproject.customer.api.CreateCustomerDTO;
-import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
 import io.restassured.RestAssured;
