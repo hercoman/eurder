@@ -26,6 +26,7 @@ public class OrderMapper {
         return new OrderDTO()
                 .setId(order.getId())
                 .setCustomerId(order.getCustomerId())
-                .setItemGroupDTOList(order.getItemGroupDTOList());
+                .setItemGroupDTOList(order.getItemGroupDTOList())
+                .setTotalPrice(order.getTotalPrice());
     }
 }

@@ -8,6 +8,7 @@ public class OrderDTO {
     private String id;
     private String customerId;
     private List<ItemGroupDTO> itemGroupDTOList;
+    private double totalPrice;
 
     public OrderDTO setId(String id) {
         this.id = id;
@@ -24,6 +25,11 @@ public class OrderDTO {
         return this;
     }
 
+    public OrderDTO setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+        return this;
+    }
+
     public String getId() {
         return id;
     }
@@ -34,6 +40,10 @@ public class OrderDTO {
 
     public List<ItemGroupDTO> getItemGroupDTOList() {
         return itemGroupDTOList;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
     @Override

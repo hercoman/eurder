@@ -83,6 +83,8 @@ class OrderControllerTest {
         List<ItemGroup> itemGroupList = itemMapper.toItemGroup(createItemGroupDTOList);
         List<ItemGroupDTO> itemGroupDTOList = itemMapper.toItemGroupDTO(itemGroupList);
         Assertions.assertThat(orderDTO.getItemGroupDTOList()).isEqualTo(Lists.newArrayList(itemGroupDTOList));
+
+        Assertions.assertThat(orderDTO.getTotalPrice()).isEqualTo(1);
     }
 
     @Test
