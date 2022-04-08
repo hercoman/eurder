@@ -56,14 +56,6 @@ public class ItemGroup {
         return shippingDate;
     }
 
-    private void validateAmount() {
-        if (amount < 0) {
-            itemGroupLogger.error("Negative amount input for item group");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create item group with negative amount");
-        }
-        itemGroupLogger.info("Successfully validated new item group amount");
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
