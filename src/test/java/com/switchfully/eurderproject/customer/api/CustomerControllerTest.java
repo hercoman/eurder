@@ -4,14 +4,18 @@ import com.switchfully.eurderproject.customer.api.dto.CreateCustomerDTO;
 import com.switchfully.eurderproject.customer.api.dto.CustomerDTO;
 import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
+import com.switchfully.eurderproject.customer.service.CustomerMapper;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
+
+import java.util.List;
 
 import static io.restassured.http.ContentType.JSON;
 
@@ -24,6 +28,9 @@ class CustomerControllerTest {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private CustomerMapper customerMapper;
 
     @Test
     void createCustomer_givenACustomerToCreate_thenTheNewlyCreatedCustomerIsSavedAndReturned() {
@@ -185,6 +192,29 @@ class CustomerControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void getAllCustomers_customersAreShownCorrectly() {
+        List<Customer> customerList = Lists.newArrayList(
+                new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999"),
+                new Customer("Jake", "Peralte", "jake.peralta@diehard.com", "Brooklyn Street, 26000 USA", "0800-999"));
+        customerList.forEach(customer -> customerRepository.save(customer));
+
+        CustomerDTO[] result = RestAssured
+                .given()
+                .port(port)
+                .when()
+                .accept(JSON)
+                .get("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(CustomerDTO[].class);
+
+        List<CustomerDTO> expectedList = customerMapper.toDTO(customerList);
+        Assertions.assertThat(List.of(result)).hasSameElementsAs(expectedList);
     }
 
 }

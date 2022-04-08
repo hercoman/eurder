@@ -5,6 +5,10 @@ import com.switchfully.eurderproject.customer.api.dto.CustomerDTO;
 import com.switchfully.eurderproject.customer.domain.Customer;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class CustomerMapper {
     public Customer toCustomer(CreateCustomerDTO createCustomerDTO) {
@@ -24,5 +28,11 @@ public class CustomerMapper {
                 .setEmail(customer.getEmail())
                 .setAddress(customer.getAddress())
                 .setPhoneNumber(customer.getPhoneNumber());
+    }
+
+    public List<CustomerDTO> toDTO(Collection<Customer> customerCollection) {
+        return customerCollection.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 }
