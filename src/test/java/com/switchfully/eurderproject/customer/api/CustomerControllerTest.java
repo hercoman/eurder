@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -196,6 +197,8 @@ class CustomerControllerTest {
 
     @Test
     void getAllCustomers_customersAreShownCorrectly() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         List<Customer> customerList = Lists.newArrayList(
                 new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999"),
                 new Customer("Jake", "Peralte", "jake.peralta@diehard.com", "Brooklyn Street, 26000 USA", "0800-999"));
@@ -206,6 +209,7 @@ class CustomerControllerTest {
                 .port(port)
                 .when()
                 .accept(JSON)
+                .headers(httpHeaders)
                 .get("/customers")
                 .then()
                 .assertThat()
@@ -219,6 +223,8 @@ class CustomerControllerTest {
 
     @Test
     void getSingleCustomer_customerIsShownCorrectly() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         Customer testCustomer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
         List<Customer> customerList = Lists.newArrayList(
                 testCustomer,
@@ -230,6 +236,7 @@ class CustomerControllerTest {
                 .port(port)
                 .when()
                 .accept(JSON)
+                .headers(httpHeaders)
                 .get("/customers/" + testCustomer.getId())
                 .then()
                 .assertThat()

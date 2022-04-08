@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -27,6 +28,8 @@ class ItemControllerTest {
 
     @Test
     void createItem_givenItemToCreate_thenTheNewlyCreatedItemIsSavedAndReturned() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         CreateItemDTO createItemDTO = new CreateItemDTO()
                 .setName("Tomato")
                 .setDescription("A clean, round tomato with lots of vitamins")
@@ -41,6 +44,7 @@ class ItemControllerTest {
                         .contentType(JSON)
                         .when()
                         .accept(JSON)
+                        .headers(httpHeaders)
                         .post("/items")
                         .then()
                         .assertThat()

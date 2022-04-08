@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -40,6 +41,8 @@ class OrderControllerTest {
 
     @Test
     void createOrder_givenOrderToSave_thenOrderIsCreatedAndSavedCorrectly() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         // GIVEN
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
@@ -67,6 +70,7 @@ class OrderControllerTest {
                         .contentType(JSON)
                         .when()
                         .accept(JSON)
+                        .headers(httpHeaders)
                         .post("/orders")
                         .then()
                         .assertThat()
