@@ -1,6 +1,7 @@
 package com.switchfully.eurderproject.order.api;
 
 import com.switchfully.eurderproject.customer.domain.Customer;
+import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.item.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.Item;
@@ -36,6 +37,9 @@ class OrderControllerTest {
     private ItemRepository itemRepository;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
     private ItemMapper itemMapper;
 
     @Test
@@ -46,6 +50,7 @@ class OrderControllerTest {
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
         Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
+        customerRepository.save(customer);
 
         CreateItemGroupDTO createItemGroupDTO1 = new CreateItemGroupDTO()
                 .setItemId(item.getId())
@@ -119,6 +124,7 @@ class OrderControllerTest {
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
         Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
+        customerRepository.save(customer);
         CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO().setItemId(item.getId()).setAmount(5);
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
                 .setCustomerId(customer.getId())
@@ -156,16 +162,16 @@ class OrderControllerTest {
                 .setCreateItemGroupDTOList(Lists.newArrayList(createItemGroupDTO));
 
         RestAssured
-                        .given()
-                        .port(port)
-                        .body(createOrderDTO)
-                        .contentType(JSON)
-                        .when()
-                        .accept(JSON)
-                        .headers(httpHeaders)
-                        .post("/orders")
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.BAD_REQUEST.value());
+                .given()
+                .port(port)
+                .body(createOrderDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .headers(httpHeaders)
+                .post("/orders")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
