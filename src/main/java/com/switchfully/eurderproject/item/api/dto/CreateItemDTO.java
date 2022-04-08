@@ -1,4 +1,4 @@
-package com.switchfully.eurderproject.item.api;
+package com.switchfully.eurderproject.item.api.dto;
 
 public class CreateItemDTO {
     private String name;

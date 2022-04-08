@@ -1,13 +1,13 @@
 package com.switchfully.eurderproject.order.service;
 
-import com.switchfully.eurderproject.item.api.CreateItemGroupDTO;
-import com.switchfully.eurderproject.item.api.ItemGroupDTO;
+import com.switchfully.eurderproject.item.api.dto.CreateItemGroupDTO;
+import com.switchfully.eurderproject.item.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.ItemGroup;
 import com.switchfully.eurderproject.item.domain.ItemGroupRepository;
 import com.switchfully.eurderproject.item.service.ItemMapper;
-import com.switchfully.eurderproject.order.api.CreateOrderDTO;
-import com.switchfully.eurderproject.order.api.OrderDTO;
-import com.switchfully.eurderproject.order.api.SavedOrderDTO;
+import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
+import com.switchfully.eurderproject.order.api.dto.OrderDTO;
+import com.switchfully.eurderproject.order.api.dto.UpdatedCreateOrderDTO;
 import com.switchfully.eurderproject.order.domain.Order;
 import com.switchfully.eurderproject.order.domain.OrderRepository;
 import org.slf4j.Logger;
@@ -33,16 +33,23 @@ public class OrderService {
     }
 
     public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
-        List<CreateItemGroupDTO> createItemGroupDTOList = createOrderDTO.getItemGroupDTOList();
-        List<ItemGroup> itemGroupList = itemMapper.toItemGroup(createItemGroupDTOList);
-        List<ItemGroup> savedItemGroupList = itemGroupList.stream()
-                .map(itemGroupRepository::save).toList();
-        List<ItemGroupDTO> itemGroupDTOList = itemMapper.toItemGroupDTO(savedItemGroupList);
-        SavedOrderDTO savedOrderDTO = new SavedOrderDTO()
+        List<ItemGroupDTO> itemGroupDTOList = createItemGroupsFromOrder(createOrderDTO);
+        UpdatedCreateOrderDTO updatedCreateOrderDTO = new UpdatedCreateOrderDTO()
                 .setCustomerId(createOrderDTO.getCustomerId())
                 .setItemGroupDTOList(itemGroupDTOList);
-        Order order = orderMapper.toOrder(savedOrderDTO);
+        Order order = orderMapper.toOrder(updatedCreateOrderDTO);
         orderRepository.save(order);
         return orderMapper.toDTO(order);
+    }
+
+    private List<ItemGroupDTO> createItemGroupsFromOrder(CreateOrderDTO createOrderDTO) {
+        List<CreateItemGroupDTO> createItemGroupDTOList = createOrderDTO.getItemGroupDTOList();
+        List<ItemGroup> savedItemGroupList = saveItemGroupsInRepository(createItemGroupDTOList);
+        return itemMapper.toItemGroupDTO(savedItemGroupList);
+    }
+
+    private List<ItemGroup> saveItemGroupsInRepository(List<CreateItemGroupDTO> createItemGroupDTOList) {
+        return itemMapper.toItemGroup(createItemGroupDTOList).stream()
+                .map(itemGroupRepository::save).toList();
     }
 }

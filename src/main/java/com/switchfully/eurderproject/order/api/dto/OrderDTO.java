@@ -1,7 +1,6 @@
-package com.switchfully.eurderproject.order.api;
+package com.switchfully.eurderproject.order.api.dto;
 
-import com.switchfully.eurderproject.item.api.ItemGroupDTO;
-import com.switchfully.eurderproject.item.domain.ItemGroup;
+import com.switchfully.eurderproject.item.api.dto.ItemGroupDTO;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package com.switchfully.eurderproject.item.api;
 
+import com.switchfully.eurderproject.item.api.dto.CreateItemDTO;
+import com.switchfully.eurderproject.item.api.dto.ItemDTO;
 import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
 import io.restassured.RestAssured;

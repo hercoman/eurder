@@ -1,8 +1,8 @@
 package com.switchfully.eurderproject.order.service;
 
 import com.switchfully.eurderproject.item.domain.ItemRepository;
-import com.switchfully.eurderproject.order.api.OrderDTO;
-import com.switchfully.eurderproject.order.api.SavedOrderDTO;
+import com.switchfully.eurderproject.order.api.dto.OrderDTO;
+import com.switchfully.eurderproject.order.api.dto.UpdatedCreateOrderDTO;
 import com.switchfully.eurderproject.order.domain.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +18,8 @@ public class OrderMapper {
         this.itemRepository = itemRepository;
     }
 
-    public Order toOrder(SavedOrderDTO savedOrderDTO) {
-        return new Order(savedOrderDTO.getCustomerId(), savedOrderDTO.getItemGroupDTOList());
+    public Order toOrder(UpdatedCreateOrderDTO updatedCreateOrderDTO) {
+        return new Order(updatedCreateOrderDTO.getCustomerId(), updatedCreateOrderDTO.getItemGroupDTOList());
     }
 
     public OrderDTO toDTO(Order order) {

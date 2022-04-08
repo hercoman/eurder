@@ -1,5 +1,7 @@
 package com.switchfully.eurderproject.customer.api;
 
+import com.switchfully.eurderproject.customer.api.dto.CreateCustomerDTO;
+import com.switchfully.eurderproject.customer.api.dto.CustomerDTO;
 import com.switchfully.eurderproject.customer.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -1,9 +1,9 @@
 package com.switchfully.eurderproject.item.service;
 
-import com.switchfully.eurderproject.item.api.CreateItemDTO;
-import com.switchfully.eurderproject.item.api.ItemDTO;
-import com.switchfully.eurderproject.item.api.CreateItemGroupDTO;
-import com.switchfully.eurderproject.item.api.ItemGroupDTO;
+import com.switchfully.eurderproject.item.api.dto.CreateItemDTO;
+import com.switchfully.eurderproject.item.api.dto.CreateItemGroupDTO;
+import com.switchfully.eurderproject.item.api.dto.ItemDTO;
+import com.switchfully.eurderproject.item.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemGroup;
 import com.switchfully.eurderproject.item.domain.ItemRepository;

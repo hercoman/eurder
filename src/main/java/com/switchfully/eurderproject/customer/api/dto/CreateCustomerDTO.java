@@ -1,4 +1,4 @@
-package com.switchfully.eurderproject.customer.api;
+package com.switchfully.eurderproject.customer.api.dto;
 
 public class CreateCustomerDTO {
     private String firstName;

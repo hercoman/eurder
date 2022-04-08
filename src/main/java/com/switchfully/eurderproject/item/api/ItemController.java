@@ -1,5 +1,7 @@
 package com.switchfully.eurderproject.item.api;
 
+import com.switchfully.eurderproject.item.api.dto.CreateItemDTO;
+import com.switchfully.eurderproject.item.api.dto.ItemDTO;
 import com.switchfully.eurderproject.item.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

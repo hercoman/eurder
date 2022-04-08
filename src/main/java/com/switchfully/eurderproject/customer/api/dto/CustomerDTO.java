@@ -1,4 +1,4 @@
-package com.switchfully.eurderproject.customer.api;
+package com.switchfully.eurderproject.customer.api.dto;
 
 import java.util.Objects;
 
