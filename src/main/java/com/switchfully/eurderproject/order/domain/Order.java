@@ -11,11 +11,13 @@ public class Order {
     private final String id;
     private final String customerId;
     private final List<ItemGroupDTO> itemGroupDTOList;
+    private final double totalPrice;
 
     public Order(String customerId, List<ItemGroupDTO> itemGroupDTOList) {
         this.id = UUID.randomUUID().toString();
         this.customerId = customerId;
         this.itemGroupDTOList = itemGroupDTOList;
+        this.totalPrice = calculateTotalPrice();
     }
 
     public String getId() {
@@ -28,6 +30,10 @@ public class Order {
 
     public List<ItemGroupDTO> getItemGroupDTOList() {
         return itemGroupDTOList;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
     @Override
@@ -52,7 +58,11 @@ public class Order {
                 '}';
     }
 
-    public double getTotalPrice() {
-        return 0;
+    public double calculateTotalPrice() {
+        double totalPrice = 0;
+        for (ItemGroupDTO itemGroup : itemGroupDTOList) {
+            totalPrice += (itemGroup.getAmount() * itemGroup.getPricePerUnit());
+        }
+        return totalPrice;
     }
 }
