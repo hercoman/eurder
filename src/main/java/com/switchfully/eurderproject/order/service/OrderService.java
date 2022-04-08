@@ -50,7 +50,7 @@ public class OrderService {
     private void updateItemInventory(List<ItemGroupDTO> itemGroupDTOList) {
         for (ItemGroupDTO itemGroupDTO : itemGroupDTOList) {
             Item orderedItem = itemRepository.getItemById(itemGroupDTO.getItemId());
-            if (orderedItem.getAmountAvailable() > itemGroupDTO.getAmount()) {
+            if (orderedItem.getAmountAvailable() >= itemGroupDTO.getAmount()) {
                 orderedItem.changeAmountAvailable(orderedItem.getAmountAvailable() - itemGroupDTO.getAmount());
                 itemRepository.save(orderedItem);
             }

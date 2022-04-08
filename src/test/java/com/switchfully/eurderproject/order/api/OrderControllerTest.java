@@ -142,4 +142,30 @@ class OrderControllerTest {
 
         Assertions.assertThat(itemRepository.getItemById(item.getId()).getAmountAvailable()).isEqualTo(5);
     }
+
+    @Test
+    void createOrder_givenIncorrectCustomerId_thenGetHttpStatusBadRequest() {
+        // GIVEN
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
+        Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
+        itemRepository.save(item);
+        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO().setItemId(item.getId()).setAmount(5);
+        CreateOrderDTO createOrderDTO = new CreateOrderDTO()
+                .setCustomerId("notAnId")
+                .setCreateItemGroupDTOList(Lists.newArrayList(createItemGroupDTO));
+
+        RestAssured
+                        .given()
+                        .port(port)
+                        .body(createOrderDTO)
+                        .contentType(JSON)
+                        .when()
+                        .accept(JSON)
+                        .headers(httpHeaders)
+                        .post("/orders")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
 }
