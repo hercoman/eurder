@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class CustomerService {
     private final Logger serviceLogger = LoggerFactory.getLogger(CustomerService.class);
@@ -35,5 +37,9 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to use given e-mail address for new customer's email address");
         }
         serviceLogger.info("Successfully validated new customer's email address to be unique");
+    }
+
+    public List<CustomerDTO> getAll() {
+        return customerMapper.toDTO(customerRepository.getAll());
     }
 }

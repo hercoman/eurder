@@ -6,6 +6,8 @@ import com.switchfully.eurderproject.customer.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "customers")
 public class CustomerController {
@@ -20,5 +22,11 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO createCustomer(@RequestBody CreateCustomerDTO createCustomerDTO) {
         return customerService.createCustomer(createCustomerDTO);
+    }
+
+    @GetMapping(produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<CustomerDTO> getAll() {
+        return customerService.getAll();
     }
 }
