@@ -43,7 +43,7 @@ public class OrderService {
     }
 
     private List<ItemGroupDTO> createItemGroupsFromOrder(CreateOrderDTO createOrderDTO) {
-        List<CreateItemGroupDTO> createItemGroupDTOList = createOrderDTO.getItemGroupDTOList();
+        List<CreateItemGroupDTO> createItemGroupDTOList = createOrderDTO.getCreateItemGroupDTOList();
         List<ItemGroup> savedItemGroupList = saveItemGroupsInRepository(createItemGroupDTOList);
         return itemMapper.toItemGroupDTO(savedItemGroupList);
     }

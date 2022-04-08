@@ -14,7 +14,7 @@ public class CreateOrderDTO {
         return this;
     }
 
-    public CreateOrderDTO setItemGroupDTOList(List<CreateItemGroupDTO> createItemGroupDTOList) {
+    public CreateOrderDTO setCreateItemGroupDTOList(List<CreateItemGroupDTO> createItemGroupDTOList) {
         this.createItemGroupDTOList = createItemGroupDTOList;
         return this;
     }
@@ -23,7 +23,7 @@ public class CreateOrderDTO {
         return customerId;
     }
 
-    public List<CreateItemGroupDTO> getItemGroupDTOList() {
+    public List<CreateItemGroupDTO> getCreateItemGroupDTOList() {
         return createItemGroupDTOList;
     }
 

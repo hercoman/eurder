@@ -21,7 +21,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static io.restassured.http.ContentType.JSON;
@@ -60,7 +59,7 @@ class OrderControllerTest {
         // WHEN
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
                 .setCustomerId(customer.getId())
-                .setItemGroupDTOList(createItemGroupDTOList);
+                .setCreateItemGroupDTOList(createItemGroupDTOList);
 
         OrderDTO orderDTO =
                 RestAssured
@@ -111,33 +110,35 @@ class OrderControllerTest {
 
     }
 
-    // UNABLE TO DEVELOP IN CURRENT SPRINT
-//    @Test
-//    void createOrder_givenItemGroupToAddToOrderWithSufficientStock_thenAmountAvailableCorrectlyUpdatedInItemRepository() {
-//        // GIVEN
-//        Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
-//        itemRepository.save(item);
-//        Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
-//        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO().setItemId(item.getId()).setAmount(5);
-//        CreateOrderDTO createOrderDTO = new CreateOrderDTO()
-//                .setCustomerId(customer.getId())
-//                .setItemGroupDTOList(Lists.newArrayList(createItemGroupDTO));
-//
-//        OrderDTO orderDTO =
-//                RestAssured
-//                        .given()
-//                        .port(port)
-//                        .body(createOrderDTO)
-//                        .contentType(JSON)
-//                        .when()
-//                        .accept(JSON)
-//                        .post("/orders")
-//                        .then()
-//                        .assertThat()
-//                        .statusCode(HttpStatus.CREATED.value())
-//                        .extract()
-//                        .as(OrderDTO.class);
-//
-//        Assertions.assertThat(itemRepository.getItemById(item.getId()).getAmountAvailable()).isEqualTo(5);
-//    }
+    @Test
+    void createOrder_givenItemGroupToAddToOrderWithSufficientStock_thenAmountAvailableCorrectlyUpdatedInItemRepository() {
+        // GIVEN
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
+        Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
+        itemRepository.save(item);
+        Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
+        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO().setItemId(item.getId()).setAmount(5);
+        CreateOrderDTO createOrderDTO = new CreateOrderDTO()
+                .setCustomerId(customer.getId())
+                .setCreateItemGroupDTOList(Lists.newArrayList(createItemGroupDTO));
+
+        OrderDTO orderDTO =
+                RestAssured
+                        .given()
+                        .port(port)
+                        .body(createOrderDTO)
+                        .contentType(JSON)
+                        .when()
+                        .accept(JSON)
+                        .headers(httpHeaders)
+                        .post("/orders")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.CREATED.value())
+                        .extract()
+                        .as(OrderDTO.class);
+
+        Assertions.assertThat(itemRepository.getItemById(item.getId()).getAmountAvailable()).isEqualTo(5);
+    }
 }
