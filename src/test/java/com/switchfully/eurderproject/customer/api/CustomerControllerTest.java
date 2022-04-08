@@ -240,4 +240,23 @@ class CustomerControllerTest {
         Assertions.assertThat(result).isEqualTo(customerMapper.toDTO(testCustomer));
     }
 
+    @Test
+    void getSingleCustomerWithNonExistingId_ThenGetHttpStatusBadRequest() {
+        Customer testCustomer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
+        List<Customer> customerList = Lists.newArrayList(
+                testCustomer,
+                new Customer("Jake", "Peralte", "jake.peralta@diehard.com", "Brooklyn Street, 26000 USA", "0800-999"));
+        customerList.forEach(customer -> customerRepository.save(customer));
+
+        RestAssured
+                .given()
+                .port(port)
+                .when()
+                .accept(JSON)
+                .get("/customers/derp")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
 }
