@@ -83,6 +83,7 @@ class OrderControllerTest {
         String expectedCustomerId = customer.getId();
         Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(expectedCustomerId);
 
+        item.changeAmountAvailable(10);
         List<ItemGroup> itemGroupList = itemMapper.toItemGroup(createItemGroupDTOList);
         List<ItemGroupDTO> itemGroupDTOList = itemMapper.toItemGroupDTO(itemGroupList);
         Assertions.assertThat(orderDTO.getItemGroupDTOList()).isEqualTo(Lists.newArrayList(itemGroupDTOList));

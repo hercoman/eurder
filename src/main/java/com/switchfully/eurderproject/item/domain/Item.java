@@ -15,7 +15,7 @@ public class Item {
     private final String name;
     private final String description;
     private final double price;
-    private final int amountAvailable;
+    private int amountAvailable;
 
     public Item(String name, String description, double price, int amountAvailable) {
         this.id = UUID.randomUUID().toString();
@@ -105,5 +105,9 @@ public class Item {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    public void changeAmountAvailable(int amountAvailable) {
+        this.amountAvailable = amountAvailable;
     }
 }
