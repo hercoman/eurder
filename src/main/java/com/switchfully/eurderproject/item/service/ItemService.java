@@ -26,7 +26,7 @@ public class ItemService {
         assertNameIsUnique(itemRepository.isNameUnique(createItemDTO.getName()));
         Item item = itemMapper.toItem(createItemDTO);
         itemRepository.save(item);
-        return itemMapper.toDTO(item);
+        return itemMapper.toItemDTO(item);
     }
 
     private void assertNameIsUnique(boolean condition) {

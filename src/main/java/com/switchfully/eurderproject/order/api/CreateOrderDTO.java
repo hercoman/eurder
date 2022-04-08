@@ -1,12 +1,12 @@
 package com.switchfully.eurderproject.order.api;
 
-import com.switchfully.eurderproject.item.api.ItemGroupDTO;
+import com.switchfully.eurderproject.item.api.CreateItemGroupDTO;
 
 import java.util.List;
 
 public class CreateOrderDTO {
     private String customerId;
-    private List<ItemGroupDTO> itemGroupDTOList;
+    private List<CreateItemGroupDTO> createItemGroupDTOList;
 
 
     public CreateOrderDTO setCustomerId(String customerId) {
@@ -14,8 +14,8 @@ public class CreateOrderDTO {
         return this;
     }
 
-    public CreateOrderDTO setItemGroupDTOList(List<ItemGroupDTO> itemGroupDTOList) {
-        this.itemGroupDTOList = itemGroupDTOList;
+    public CreateOrderDTO setItemGroupDTOList(List<CreateItemGroupDTO> createItemGroupDTOList) {
+        this.createItemGroupDTOList = createItemGroupDTOList;
         return this;
     }
 
@@ -23,7 +23,15 @@ public class CreateOrderDTO {
         return customerId;
     }
 
-    public List<ItemGroupDTO> getItemGroupDTOList() {
-        return itemGroupDTOList;
+    public List<CreateItemGroupDTO> getItemGroupDTOList() {
+        return createItemGroupDTOList;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateOrderDTO{" +
+                "customerId='" + customerId + '\'' +
+                ", createItemGroupDTOList=" + createItemGroupDTOList +
+                '}';
     }
 }

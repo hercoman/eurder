@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SavedOrderDTO {
     private String customerId;
-    private List<ItemGroup> itemGroupList;
+    private List<ItemGroupDTO> itemGroupDTOList;
 
 
     public SavedOrderDTO setCustomerId(String customerId) {
@@ -15,8 +15,8 @@ public class SavedOrderDTO {
         return this;
     }
 
-    public SavedOrderDTO setItemGroupList(List<ItemGroup> itemGroupList) {
-        this.itemGroupList = itemGroupList;
+    public SavedOrderDTO setItemGroupDTOList(List<ItemGroupDTO> itemGroupDTOList) {
+        this.itemGroupDTOList = itemGroupDTOList;
         return this;
     }
 
@@ -24,7 +24,15 @@ public class SavedOrderDTO {
         return customerId;
     }
 
-    public List<ItemGroup> getItemGroupList() {
-        return itemGroupList;
+    public List<ItemGroupDTO> getItemGroupDTOList() {
+        return itemGroupDTOList;
+    }
+
+    @Override
+    public String toString() {
+        return "SavedOrderDTO{" +
+                "customerId='" + customerId + '\'' +
+                ", itemGroupDTOList=" + itemGroupDTOList +
+                '}';
     }
 }

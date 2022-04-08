@@ -48,6 +48,10 @@ public class ItemGroup {
         return id;
     }
 
+    public String getItemId() {
+        return itemId;
+    }
+
     public int getAmount() {
         return amount;
     }

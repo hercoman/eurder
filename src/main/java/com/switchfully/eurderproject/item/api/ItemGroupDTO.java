@@ -1,8 +1,19 @@
 package com.switchfully.eurderproject.item.api;
 
+import java.time.LocalDate;
+import java.util.Objects;
+
 public class ItemGroupDTO {
+    private String id;
     private String itemId;
     private int amount;
+    private double pricePerUnit;
+    private LocalDate shippingDate;
+
+    public ItemGroupDTO setId(String id) {
+        this.id = id;
+        return this;
+    }
 
     public ItemGroupDTO setItemId(String itemId) {
         this.itemId = itemId;
@@ -14,6 +25,20 @@ public class ItemGroupDTO {
         return this;
     }
 
+    public ItemGroupDTO setPricePerUnit(double pricePerUnit) {
+        this.pricePerUnit = pricePerUnit;
+        return this;
+    }
+
+    public ItemGroupDTO setShippingDate(LocalDate shippingDate) {
+        this.shippingDate = shippingDate;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     public String getItemId() {
         return itemId;
     }
@@ -22,11 +47,35 @@ public class ItemGroupDTO {
         return amount;
     }
 
+    public double getPricePerUnit() {
+        return pricePerUnit;
+    }
+
+    public LocalDate getShippingDate() {
+        return shippingDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemGroupDTO that = (ItemGroupDTO) o;
+        return amount == that.amount && Double.compare(that.pricePerUnit, pricePerUnit) == 0 && Objects.equals(itemId, that.itemId) && Objects.equals(shippingDate, that.shippingDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId, amount, pricePerUnit, shippingDate);
+    }
+
     @Override
     public String toString() {
         return "ItemGroupDTO{" +
-                "itemId='" + itemId + '\'' +
+                "id='" + id + '\'' +
+                ", itemId='" + itemId + '\'' +
                 ", amount=" + amount +
+                ", pricePerUnit=" + pricePerUnit +
+                ", shippingDate=" + shippingDate +
                 '}';
     }
 }

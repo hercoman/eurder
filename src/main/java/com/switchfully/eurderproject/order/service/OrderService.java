@@ -1,5 +1,6 @@
 package com.switchfully.eurderproject.order.service;
 
+import com.switchfully.eurderproject.item.api.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item.api.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.ItemGroup;
 import com.switchfully.eurderproject.item.domain.ItemGroupRepository;
@@ -9,13 +10,15 @@ import com.switchfully.eurderproject.order.api.OrderDTO;
 import com.switchfully.eurderproject.order.api.SavedOrderDTO;
 import com.switchfully.eurderproject.order.domain.Order;
 import com.switchfully.eurderproject.order.domain.OrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+    private final Logger orderServiceLogger = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
     private final ItemGroupRepository itemGroupRepository;
@@ -30,13 +33,14 @@ public class OrderService {
     }
 
     public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
-        List<ItemGroupDTO> itemGroupDTOList = createOrderDTO.getItemGroupDTOList();
-        List<ItemGroup> itemGroupList = itemMapper.toItemGroup(itemGroupDTOList);
+        List<CreateItemGroupDTO> createItemGroupDTOList = createOrderDTO.getItemGroupDTOList();
+        List<ItemGroup> itemGroupList = itemMapper.toItemGroup(createItemGroupDTOList);
         List<ItemGroup> savedItemGroupList = itemGroupList.stream()
                 .map(itemGroupRepository::save).toList();
+        List<ItemGroupDTO> itemGroupDTOList = itemMapper.toItemGroupDTO(savedItemGroupList);
         SavedOrderDTO savedOrderDTO = new SavedOrderDTO()
                 .setCustomerId(createOrderDTO.getCustomerId())
-                .setItemGroupList(savedItemGroupList);
+                .setItemGroupDTOList(itemGroupDTOList);
         Order order = orderMapper.toOrder(savedOrderDTO);
         orderRepository.save(order);
         return orderMapper.toDTO(order);

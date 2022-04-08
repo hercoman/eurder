@@ -2,6 +2,7 @@ package com.switchfully.eurderproject.item.service;
 
 import com.switchfully.eurderproject.item.api.CreateItemDTO;
 import com.switchfully.eurderproject.item.api.ItemDTO;
+import com.switchfully.eurderproject.item.api.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item.api.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemGroup;
@@ -30,7 +31,7 @@ public class ItemMapper {
                 createItemDTO.getAmountAvailable());
     }
 
-    public ItemDTO toDTO(Item item) {
+    public ItemDTO toItemDTO(Item item) {
         return new ItemDTO()
                 .setId(item.getId())
                 .setName(item.getName())
@@ -39,28 +40,44 @@ public class ItemMapper {
                 .setAmountAvailable(item.getAmountAvailable());
     }
 
-    public ItemGroup toItemGroup(ItemGroupDTO itemGroupDTO) {
-        String itemId = itemGroupDTO.getItemId();
+    public ItemGroup toItemGroup(CreateItemGroupDTO createItemGroupDTO) {
+        String itemId = createItemGroupDTO.getItemId();
         double orderPricePerUnit = itemRepository.getItemById(itemId).getPrice();
         int amountAvailable = itemRepository.getItemById(itemId).getAmountAvailable();
-        LocalDate shippingDate = calculateShippingDate(itemGroupDTO, amountAvailable);
+        LocalDate shippingDate = calculateShippingDate(createItemGroupDTO, amountAvailable);
         return new ItemGroup(
                 itemId,
-                itemGroupDTO.getAmount(),
+                createItemGroupDTO.getAmount(),
                 orderPricePerUnit,
                 shippingDate);
     }
 
-    private LocalDate calculateShippingDate(ItemGroupDTO itemGroupDTO, int amountAvailable) {
-        if (itemGroupDTO.getAmount() < amountAvailable) {
+    private LocalDate calculateShippingDate(CreateItemGroupDTO createItemGroupDTO, int amountAvailable) {
+        if (createItemGroupDTO.getAmount() < amountAvailable) {
             return LocalDate.now().plusDays(1);
         }
         return LocalDate.now().plusDays(7);
     }
 
-    public List<ItemGroup> toItemGroup(Collection<ItemGroupDTO> itemGroupDTOCollection) {
-        return itemGroupDTOCollection.stream()
+    public List<ItemGroup> toItemGroup(Collection<CreateItemGroupDTO> createItemGroupDTOCollection) {
+        return createItemGroupDTOCollection.stream()
                 .map(this::toItemGroup)
                 .collect(Collectors.toList());
     }
+
+    public ItemGroupDTO toItemGroupDTO(ItemGroup itemGroup) {
+        return new ItemGroupDTO()
+                .setId(itemGroup.getId())
+                .setItemId(itemGroup.getItemId())
+                .setAmount(itemGroup.getAmount())
+                .setPricePerUnit(itemGroup.getPricePerUnit())
+                .setShippingDate(itemGroup.getShippingDate());
+    }
+
+    public List<ItemGroupDTO> toItemGroupDTO(Collection<ItemGroup> itemGroupCollection) {
+        return itemGroupCollection.stream()
+                .map(this::toItemGroupDTO)
+                .collect(Collectors.toList());
+    }
+
 }

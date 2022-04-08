@@ -1,6 +1,6 @@
 package com.switchfully.eurderproject.item.domain;
 
-import com.switchfully.eurderproject.item.api.ItemGroupDTO;
+import com.switchfully.eurderproject.item.api.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item.service.ItemMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,10 +32,10 @@ class ItemGroupTest {
     void createItemGroup_givenAnItemGroupToCreate_thenTheNewlyCreatedItemGroupIsSavedCorrectly() {
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
-        ItemGroupDTO itemGroupDTO = new ItemGroupDTO()
+        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO()
                 .setItemId(item.getId())
                 .setAmount(5);
-        ItemGroup itemGroup = itemMapper.toItemGroup(itemGroupDTO);
+        ItemGroup itemGroup = itemMapper.toItemGroup(createItemGroupDTO);
         itemGroupRepository.save(itemGroup);
 
         Assertions.assertThat(itemGroupRepository.getById(itemGroup.getId())).isEqualTo(itemGroup);
@@ -48,11 +48,11 @@ class ItemGroupTest {
     void createItemGroup_givenAnItemGroupWithNegativeAmount_thenGetHttpStatusBadRequest() {
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
-        ItemGroupDTO itemGroupDTO = new ItemGroupDTO()
+        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO()
                 .setItemId(item.getId())
                 .setAmount(-5);
 
-        Assertions.assertThatThrownBy(() -> itemMapper.toItemGroup(itemGroupDTO))
+        Assertions.assertThatThrownBy(() -> itemMapper.toItemGroup(createItemGroupDTO))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Unable to create item group with negative amount");
     }
@@ -61,11 +61,11 @@ class ItemGroupTest {
     void createItemGroup_givenAnItemGroupWithNonExistingId_thenGetHttpStatusBadRequest() {
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
-        ItemGroupDTO itemGroupDTO = new ItemGroupDTO()
+        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO()
                 .setItemId("derp")
                 .setAmount(5);
 
-        Assertions.assertThatThrownBy(() -> itemMapper.toItemGroup(itemGroupDTO))
+        Assertions.assertThatThrownBy(() -> itemMapper.toItemGroup(createItemGroupDTO))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("No item found for id derp");
     }

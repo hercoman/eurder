@@ -1,13 +1,12 @@
 package com.switchfully.eurderproject.order.api;
 
-import com.switchfully.eurderproject.customer.api.CustomerDTO;
 import com.switchfully.eurderproject.customer.domain.Customer;
+import com.switchfully.eurderproject.item.api.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item.api.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemGroup;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item.service.ItemMapper;
-import com.switchfully.eurderproject.order.domain.Order;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
@@ -42,17 +41,18 @@ class OrderControllerTest {
         itemRepository.save(item);
         Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
 
-        ItemGroupDTO itemGroupDTO1 = new ItemGroupDTO()
+        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO()
                 .setItemId(item.getId())
                 .setAmount(5);
-        ItemGroup itemGroup1 = itemMapper.toItemGroup(itemGroupDTO1);
+        ItemGroup itemGroup = itemMapper.toItemGroup(createItemGroupDTO);
+        ItemGroupDTO itemGroupDTO = itemMapper.toItemGroupDTO(itemGroup);
 
-        List<ItemGroupDTO> itemGroupDTOList = Lists.newArrayList(itemGroupDTO1);
+        List<CreateItemGroupDTO> createItemGroupDTOList = Lists.newArrayList(createItemGroupDTO);
 
         //WHEN
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
                 .setCustomerId(customer.getId())
-                .setItemGroupDTOList(itemGroupDTOList);
+                .setItemGroupDTOList(createItemGroupDTOList);
 
         OrderDTO orderDTO =
                 RestAssured
@@ -70,9 +70,10 @@ class OrderControllerTest {
                         .as(OrderDTO.class);
 
         String expectedCustomerId = customer.getId();
-        List<ItemGroup> expectedItemGroupList = Lists.newArrayList(itemGroup1);
+        List<ItemGroupDTO> expectedItemGroupDTOList = Lists.newArrayList(itemGroupDTO);
+        System.out.println(orderDTO);
         Assertions.assertThat(orderDTO.getId()).isNotBlank();
         Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(expectedCustomerId);
-        Assertions.assertThat(orderDTO.getItemGroupList()).isEqualTo(expectedItemGroupList);
+        Assertions.assertThat(orderDTO.getItemGroupDTOList()).isEqualTo(expectedItemGroupDTOList);
     }
 }
