@@ -26,7 +26,13 @@ public class CustomerController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<CustomerDTO> getAll() {
-        return customerService.getAll();
+    public List<CustomerDTO> viewAll() {
+        return customerService.viewAll();
+    }
+
+    @GetMapping(path = "/{customerId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDTO viewCustomer(@PathVariable String customerId) {
+        return customerService.viewCustomer(customerId);
     }
 }

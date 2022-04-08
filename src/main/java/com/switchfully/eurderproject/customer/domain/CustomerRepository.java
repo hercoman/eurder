@@ -27,4 +27,8 @@ public class CustomerRepository {
     public Collection<Customer> getAll() {
         return customersById.values();
     }
+
+    public Customer getCustomerById(String customerId) {
+        return customersById.get(customerId);
+    }
 }

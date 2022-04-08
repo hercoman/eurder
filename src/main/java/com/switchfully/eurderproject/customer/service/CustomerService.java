@@ -39,7 +39,11 @@ public class CustomerService {
         serviceLogger.info("Successfully validated new customer's email address to be unique");
     }
 
-    public List<CustomerDTO> getAll() {
+    public List<CustomerDTO> viewAll() {
         return customerMapper.toDTO(customerRepository.getAll());
+    }
+
+    public CustomerDTO viewCustomer(String customerId) {
+        return customerMapper.toDTO(customerRepository.getCustomerById(customerId));
     }
 }
