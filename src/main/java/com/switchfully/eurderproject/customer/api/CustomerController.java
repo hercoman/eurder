@@ -31,13 +31,15 @@ public class CustomerController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<CustomerDTO> viewAll() {
+    public List<CustomerDTO> viewAll(@RequestHeader String authorization) {
+        securityService.validateAuthorization(authorization, VIEW_CUSTOMERS);
         return customerService.viewAll();
     }
 
     @GetMapping(path = "/{customerId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDTO viewCustomer(@PathVariable String customerId) {
+    public CustomerDTO viewCustomer(@RequestHeader String authorization, @PathVariable String customerId) {
+        securityService.validateAuthorization(authorization, VIEW_CUSTOMER_BY_ID);
         return customerService.viewCustomer(customerId);
     }
 }

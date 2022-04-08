@@ -22,11 +22,11 @@ public class SecurityService {
         UsernamePassword usernamePassword = getUsernamePassword(authorization);
         User user = userRepository.getUser(usernamePassword.getUsername());
         if (user == null) {
-            securityServiceLogger.error("Unknown user" + usernamePassword.getUsername());
+            securityServiceLogger.error("Unknown user " + usernamePassword.getUsername());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unknown user" + usernamePassword.getUsername());
         }
         if (!user.doesPasswordMatch(usernamePassword.getPassword())) {
-            securityServiceLogger.error("Password does not match for user" + usernamePassword.getUsername());
+            securityServiceLogger.error("Password does not match for user " + usernamePassword.getUsername());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid combination of user name and password");
         }
         if (!user.canHaveAccessTo(feature)) {
