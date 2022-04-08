@@ -9,6 +9,7 @@ import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item.service.ItemMapper;
 import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
 import com.switchfully.eurderproject.order.api.dto.OrderDTO;
+import com.switchfully.eurderproject.order.domain.Order;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
@@ -19,6 +20,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static io.restassured.http.ContentType.JSON;
@@ -81,5 +83,24 @@ class OrderControllerTest {
         List<ItemGroup> itemGroupList = itemMapper.toItemGroup(createItemGroupDTOList);
         List<ItemGroupDTO> itemGroupDTOList = itemMapper.toItemGroupDTO(itemGroupList);
         Assertions.assertThat(orderDTO.getItemGroupDTOList()).isEqualTo(Lists.newArrayList(itemGroupDTOList));
+    }
+
+    @Test
+    void createOrder_givenItemGroupToAddToOrderWithSufficientStock_thenAmountAvailableCorrectlyUpdatedInItemRepository() {
+        // GIVEN
+        Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
+        itemRepository.save(item);
+        Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
+
+        Order order = new Order(
+                customer.getId(),
+                Lists.newArrayList(new ItemGroupDTO()
+                        .setId("1")
+                        .setItemId(item.getId())
+                        .setAmount(5)
+                        .setPricePerUnit(item.getPrice())
+                        .setShippingDate(LocalDate.now().plusDays(1))));
+
+        Assertions.assertThat(itemRepository.getItemById(item.getId()).getAmountAvailable()).isEqualTo(5);
     }
 }
