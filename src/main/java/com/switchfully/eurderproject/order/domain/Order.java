@@ -26,6 +26,12 @@ public class Order {
         orderLogger.info("Successfully created new order");
     }
 
+    public double calculateTotalPrice() {
+        return itemGroupDTOList.stream()
+                .map(itemGroup -> itemGroup.getPricePerUnit() * itemGroup.getAmount())
+                .reduce(0.0, Double::sum);
+    }
+
     public String getId() {
         return id;
     }
@@ -62,13 +68,5 @@ public class Order {
                 ", customerId='" + customerId + '\'' +
                 ", itemGroupDTOList=" + itemGroupDTOList +
                 '}';
-    }
-
-    public double calculateTotalPrice() {
-        double totalPrice = 0;
-        for (ItemGroupDTO itemGroup : itemGroupDTOList) {
-            totalPrice += (itemGroup.getAmount() * itemGroup.getPricePerUnit());
-        }
-        return totalPrice;
     }
 }
