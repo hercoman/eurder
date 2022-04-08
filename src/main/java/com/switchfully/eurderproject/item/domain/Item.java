@@ -23,6 +23,7 @@ public class Item {
         this.description = validateDescription(description);
         this.price = validatePrice(price);
         this.amountAvailable = validateAmountAvailable(amountAvailable);
+        itemLogger.info("Successfully created new item");
     }
 
     private String validateName(String name) {

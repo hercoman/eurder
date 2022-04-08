@@ -2,12 +2,17 @@ package com.switchfully.eurderproject.order.domain;
 
 
 import com.switchfully.eurderproject.item.api.dto.ItemGroupDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.support.SortDefinition;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Order {
+    private final Logger orderLogger = LoggerFactory.getLogger(Order.class);
+
     private final String id;
     private final String customerId;
     private final List<ItemGroupDTO> itemGroupDTOList;
@@ -18,6 +23,7 @@ public class Order {
         this.customerId = customerId;
         this.itemGroupDTOList = itemGroupDTOList;
         this.totalPrice = calculateTotalPrice();
+        orderLogger.info("Successfully created new order");
     }
 
     public String getId() {

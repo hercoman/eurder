@@ -22,26 +22,18 @@ public class ItemGroup {
         this.id = UUID.randomUUID().toString();
         this.itemId = itemId;
         this.amount = validateAmount(amount);
-        this.pricePerUnit = validatePricePerUnit(pricePerUnit);
+        this.pricePerUnit = pricePerUnit;
         this.shippingDate = shippingDate;
+        itemGroupLogger.info("Successfully created new item group");
     }
 
     private int validateAmount(int amount) {
-        validateAndCheckLoggingMessage(
-                (amount < 0),
-                "Negative amount input for item group",
-                "Unable to create item group with negative amount",
-                "Successfully validated new item group amount");
+        if (amount < 0) {
+            itemGroupLogger.error("Negative amount input for item group");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create item group with negative amount");
+        }
+        itemGroupLogger.info("Successfully validated new item group amount");
         return amount;
-    }
-
-    private double validatePricePerUnit(double pricePerUnit) {
-        validateAndCheckLoggingMessage(
-                (pricePerUnit < 0),
-                "Negative price per unit input for item group",
-                "Unable to create item group with negative price per unit",
-                "Successfully validated new item group price per unit");
-        return pricePerUnit;
     }
 
     public String getId() {
@@ -64,12 +56,12 @@ public class ItemGroup {
         return shippingDate;
     }
 
-    private void validateAndCheckLoggingMessage(boolean condition, String loggerErrorMessage, String jsonErrorMessage, String confirmationMessage) {
-        if (condition) {
-            itemGroupLogger.error(loggerErrorMessage);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, jsonErrorMessage);
+    private void validateAmount() {
+        if (amount < 0) {
+            itemGroupLogger.error("Negative amount input for item group");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create item group with negative amount");
         }
-        itemGroupLogger.info(confirmationMessage);
+        itemGroupLogger.info("Successfully validated new item group amount");
     }
 
     @Override
