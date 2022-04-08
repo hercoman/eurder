@@ -85,6 +85,26 @@ class OrderControllerTest {
         Assertions.assertThat(orderDTO.getItemGroupDTOList()).isEqualTo(Lists.newArrayList(itemGroupDTOList));
     }
 
+    @Test
+    void createOrder_givenOrderWithMultipleItems_thenOrderPriceCalculatedCorrectly() {
+        // GIVEN
+        Item item1 = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
+        Item item2 = new Item("Carrot", "A carrot", 0.14, 30);
+        List<Item> items = Lists.newArrayList(item1, item2);
+        items.forEach(item -> itemRepository.save(item));
+        Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
+        CreateItemGroupDTO createItemGroupDTO1 = new CreateItemGroupDTO().setItemId(item1.getId()).setAmount(5);
+        CreateItemGroupDTO createItemGroupDTO2 = new CreateItemGroupDTO().setItemId(item2.getId()).setAmount(7);
+        List<CreateItemGroupDTO> createItemGroupDTOList = Lists.newArrayList(createItemGroupDTO1, createItemGroupDTO2);
+        List<ItemGroup> itemGroupList = itemMapper.toItemGroup(createItemGroupDTOList);
+        List<ItemGroupDTO> itemGroupDTOList = itemMapper.toItemGroupDTO(itemGroupList);
+
+        Order order = new Order(customer.getId(), itemGroupDTOList);
+
+        Assertions.assertThat(order.getTotalPrice()).isEqualTo(1.605);
+
+    }
+
     // UNABLE TO DEVELOP IN CURRENT SPRINT
 //    @Test
 //    void createOrder_givenItemGroupToAddToOrderWithSufficientStock_thenAmountAvailableCorrectlyUpdatedInItemRepository() {

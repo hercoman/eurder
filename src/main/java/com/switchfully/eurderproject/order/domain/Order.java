@@ -51,4 +51,8 @@ public class Order {
                 ", itemGroupDTOList=" + itemGroupDTOList +
                 '}';
     }
+
+    public double getTotalPrice() {
+        return 0;
+    }
 }
