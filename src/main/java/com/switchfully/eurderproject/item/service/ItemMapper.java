@@ -41,22 +41,7 @@ public class ItemMapper {
     }
 
     public ItemGroup toItemGroup(CreateItemGroupDTO createItemGroupDTO) {
-        String itemId = createItemGroupDTO.getItemId();
-        double orderPricePerUnit = itemRepository.getItemById(itemId).getPrice();
-        int amountAvailable = itemRepository.getItemById(itemId).getAmountAvailable();
-        LocalDate shippingDate = calculateShippingDate(createItemGroupDTO, amountAvailable);
-        return new ItemGroup(
-                itemId,
-                createItemGroupDTO.getAmount(),
-                orderPricePerUnit,
-                shippingDate);
-    }
-
-    private LocalDate calculateShippingDate(CreateItemGroupDTO createItemGroupDTO, int amountAvailable) {
-        if (createItemGroupDTO.getAmount() <= amountAvailable) {
-            return LocalDate.now().plusDays(1);
-        }
-        return LocalDate.now().plusDays(7);
+        return new ItemGroup(itemRepository.getItemById(createItemGroupDTO.getItemId()), createItemGroupDTO.getAmount());
     }
 
     public List<ItemGroup> toItemGroup(Collection<CreateItemGroupDTO> createItemGroupDTOCollection) {

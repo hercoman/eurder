@@ -1,6 +1,5 @@
 package com.switchfully.eurderproject.order.service;
 
-import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.item.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item.api.dto.ItemGroupDTO;
@@ -11,7 +10,6 @@ import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item.service.ItemMapper;
 import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
 import com.switchfully.eurderproject.order.api.dto.OrderDTO;
-import com.switchfully.eurderproject.order.api.dto.UpdatedCreateOrderDTO;
 import com.switchfully.eurderproject.order.domain.Order;
 import com.switchfully.eurderproject.order.domain.OrderRepository;
 import org.slf4j.Logger;
@@ -41,30 +39,29 @@ public class OrderService {
     }
 
     public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
-        Customer foundCustomer = customerRepository.getCustomerById(createOrderDTO.getCustomerId());
-        List<ItemGroupDTO> itemGroupDTOList = createItemGroupsFromOrder(createOrderDTO);
-        updateItemInventory(itemGroupDTOList);
-        UpdatedCreateOrderDTO updatedCreateOrderDTO = new UpdatedCreateOrderDTO()
-                .setCustomerId(foundCustomer.getId())
-                .setItemGroupDTOList(itemGroupDTOList);
-        Order order = orderMapper.toOrder(updatedCreateOrderDTO);
+        List<ItemGroupDTO> itemGroupList = createItemGroupsFromOrder(createOrderDTO.getCreateItemGroupDTOList());
+        orderItems(itemGroupList);
+//        UpdatedCreateOrderDTO updatedCreateOrderDTO = new UpdatedCreateOrderDTO()
+//                .setCustomerId(foundCustomer.getId())
+//                .setItemGroupDTOList(itemGroupList);
+        Order order = new Order(customerRepository.getCustomerById(createOrderDTO.getCustomerId()).getId(), itemGroupList);
         orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
 
-    private void updateItemInventory(List<ItemGroupDTO> itemGroupDTOList) {
+    private void orderItems(List<ItemGroupDTO> itemGroupDTOList) {
         for (ItemGroupDTO itemGroupDTO : itemGroupDTOList) {
             Item orderedItem = itemRepository.getItemById(itemGroupDTO.getItemId());
             if (orderedItem.getAmountAvailable() >= itemGroupDTO.getAmount()) {
                 orderedItem.changeAmountAvailable(orderedItem.getAmountAvailable() - itemGroupDTO.getAmount());
+                // OK TO THROW EXCEPTION?
                 itemRepository.save(orderedItem);
             }
         }
     }
 
-    private List<ItemGroupDTO> createItemGroupsFromOrder(CreateOrderDTO createOrderDTO) {
-        List<CreateItemGroupDTO> createItemGroupDTOList = createOrderDTO.getCreateItemGroupDTOList();
-        List<ItemGroup> savedItemGroupList = saveItemGroupsInRepository(createItemGroupDTOList);
+    private List<ItemGroupDTO> createItemGroupsFromOrder(List<CreateItemGroupDTO> createItemGroupDTOList1) {
+        List<ItemGroup> savedItemGroupList = saveItemGroupsInRepository(createItemGroupDTOList1);
         return itemMapper.toItemGroupDTO(savedItemGroupList);
     }
 

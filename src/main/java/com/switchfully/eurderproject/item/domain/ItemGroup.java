@@ -1,5 +1,6 @@
 package com.switchfully.eurderproject.item.domain;
 
+import com.switchfully.eurderproject.item.api.dto.CreateItemGroupDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,20 @@ public class ItemGroup {
     private final double pricePerUnit;
     private final LocalDate shippingDate;
 
-    public ItemGroup(String itemId, int amount, double pricePerUnit, LocalDate shippingDate) {
+    public ItemGroup(Item item, int amount) {
         this.id = UUID.randomUUID().toString();
-        this.itemId = itemId;
+        this.itemId = item.getId();
         this.amount = validateAmount(amount);
-        this.pricePerUnit = pricePerUnit;
-        this.shippingDate = shippingDate;
+        this.pricePerUnit = item.getPrice();
+        this.shippingDate = calculateShippingDate(amount, item.getAmountAvailable());
         itemGroupLogger.info("Successfully created new item group");
+    }
+
+    private LocalDate calculateShippingDate(int amount, int amountAvailable) {
+        if (amount <= amountAvailable) {
+            return LocalDate.now().plusDays(1);
+        }
+        return LocalDate.now().plusDays(7);
     }
 
     private int validateAmount(int amount) {
