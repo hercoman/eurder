@@ -1,11 +1,11 @@
 package com.switchfully.eurderproject.order.service;
 
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
-import com.switchfully.eurderproject.item.api.dto.CreateItemGroupDTO;
-import com.switchfully.eurderproject.item.api.dto.ItemGroupDTO;
+import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
+import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.Item;
-import com.switchfully.eurderproject.item.domain.ItemGroup;
-import com.switchfully.eurderproject.item.domain.ItemGroupRepository;
+import com.switchfully.eurderproject.item_group.domain.ItemGroup;
+import com.switchfully.eurderproject.item_group.domain.ItemGroupRepository;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item.service.ItemMapper;
 import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;

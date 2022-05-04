@@ -1,4 +1,4 @@
-package com.switchfully.eurderproject.item.api.dto;
+package com.switchfully.eurderproject.item_group.api.dto;
 
 import java.time.LocalDate;
 import java.util.Objects;

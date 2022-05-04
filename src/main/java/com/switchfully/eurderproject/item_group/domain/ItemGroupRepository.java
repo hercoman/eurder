@@ -1,4 +1,4 @@
-package com.switchfully.eurderproject.item.domain;
+package com.switchfully.eurderproject.item_group.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

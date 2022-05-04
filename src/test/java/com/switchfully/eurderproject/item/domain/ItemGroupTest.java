@@ -1,7 +1,9 @@
 package com.switchfully.eurderproject.item.domain;
 
-import com.switchfully.eurderproject.item.api.dto.CreateItemGroupDTO;
+import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item.service.ItemMapper;
+import com.switchfully.eurderproject.item_group.domain.ItemGroup;
+import com.switchfully.eurderproject.item_group.domain.ItemGroupRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
