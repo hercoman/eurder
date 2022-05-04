@@ -19,20 +19,12 @@ public class ItemGroup {
     private final double pricePerUnit;
     private final LocalDate shippingDate;
 
-    public ItemGroup(Item item, int amount) {
+    public ItemGroup(String itemId, int amount, double pricePerUnit, LocalDate shippingDate) {
         this.id = UUID.randomUUID().toString();
-        this.itemId = item.getId();
-        this.amount = validateAmount(amount);
-        this.pricePerUnit = item.getPrice();
-        this.shippingDate = calculateShippingDate(amount, item.getAmountAvailable());
-        itemGroupLogger.info("Successfully created new item group");
-    }
-
-    private LocalDate calculateShippingDate(int amount, int amountAvailable) {
-        if (amount <= amountAvailable) {
-            return LocalDate.now().plusDays(1);
-        }
-        return LocalDate.now().plusDays(7);
+        this.itemId = itemId;
+        this.amount = amount;
+        this.pricePerUnit = pricePerUnit;
+        this.shippingDate = shippingDate;
     }
 
     private int validateAmount(int amount) {

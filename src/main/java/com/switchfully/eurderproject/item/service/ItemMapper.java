@@ -5,8 +5,8 @@ import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item.api.dto.ItemDTO;
 import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.Item;
-import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
+import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -37,31 +37,6 @@ public class ItemMapper {
                 .setDescription(item.getDescription())
                 .setPrice(item.getPrice())
                 .setAmountAvailable(item.getAmountAvailable());
-    }
-
-    public ItemGroup toItemGroup(CreateItemGroupDTO createItemGroupDTO) {
-        return new ItemGroup(itemRepository.getItemById(createItemGroupDTO.getItemId()), createItemGroupDTO.getAmount());
-    }
-
-    public List<ItemGroup> toItemGroup(Collection<CreateItemGroupDTO> createItemGroupDTOCollection) {
-        return createItemGroupDTOCollection.stream()
-                .map(this::toItemGroup)
-                .collect(Collectors.toList());
-    }
-
-    public ItemGroupDTO toItemGroupDTO(ItemGroup itemGroup) {
-        return new ItemGroupDTO()
-                .setId(itemGroup.getId())
-                .setItemId(itemGroup.getItemId())
-                .setAmount(itemGroup.getAmount())
-                .setPricePerUnit(itemGroup.getPricePerUnit())
-                .setShippingDate(itemGroup.getShippingDate());
-    }
-
-    public List<ItemGroupDTO> toItemGroupDTO(Collection<ItemGroup> itemGroupCollection) {
-        return itemGroupCollection.stream()
-                .map(this::toItemGroupDTO)
-                .collect(Collectors.toList());
     }
 
 }

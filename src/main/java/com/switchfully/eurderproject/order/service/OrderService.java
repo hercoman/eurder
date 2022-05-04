@@ -8,6 +8,7 @@ import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import com.switchfully.eurderproject.item_group.domain.ItemGroupRepository;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item.service.ItemMapper;
+import com.switchfully.eurderproject.item_group.service.ItemGroupMapper;
 import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
 import com.switchfully.eurderproject.order.api.dto.OrderDTO;
 import com.switchfully.eurderproject.order.domain.Order;
@@ -28,45 +29,36 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final OrderMapper orderMapper;
     private final ItemMapper itemMapper;
+    private final ItemGroupMapper itemGroupMapper;
 
-    public OrderService(CustomerRepository customerRepository, OrderRepository orderRepository, ItemGroupRepository itemGroupRepository, ItemRepository itemRepository, OrderMapper orderMapper, ItemMapper itemMapper) {
+    public OrderService(CustomerRepository customerRepository, OrderRepository orderRepository, ItemGroupRepository itemGroupRepository, ItemRepository itemRepository, OrderMapper orderMapper, ItemMapper itemMapper, ItemGroupMapper itemGroupMapper) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.itemGroupRepository = itemGroupRepository;
         this.itemRepository = itemRepository;
         this.orderMapper = orderMapper;
         this.itemMapper = itemMapper;
+        this.itemGroupMapper = itemGroupMapper;
     }
 
     public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
-        List<ItemGroupDTO> itemGroupList = createItemGroupsFromOrder(createOrderDTO.getCreateItemGroupDTOList());
+        List<ItemGroup> itemGroupList = itemGroupMapper.toItemGroup(createOrderDTO.getCreateItemGroupDTOList());
+//                createItemGroupsFromOrder(createOrderDTO.getCreateItemGroupDTOList());
+        itemGroupList.forEach(itemGroupRepository::save);
         orderItems(itemGroupList);
-//        UpdatedCreateOrderDTO updatedCreateOrderDTO = new UpdatedCreateOrderDTO()
-//                .setCustomerId(foundCustomer.getId())
-//                .setItemGroupDTOList(itemGroupList);
         Order order = new Order(customerRepository.getCustomerById(createOrderDTO.getCustomerId()).getId(), itemGroupList);
         orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
 
-    private void orderItems(List<ItemGroupDTO> itemGroupDTOList) {
-        for (ItemGroupDTO itemGroupDTO : itemGroupDTOList) {
-            Item orderedItem = itemRepository.getItemById(itemGroupDTO.getItemId());
-            if (orderedItem.getAmountAvailable() >= itemGroupDTO.getAmount()) {
-                orderedItem.changeAmountAvailable(orderedItem.getAmountAvailable() - itemGroupDTO.getAmount());
+    private void orderItems(List<ItemGroup> itemGroupList) {
+        for (ItemGroup itemGroup : itemGroupList) {
+            Item orderedItem = itemRepository.getItemById(itemGroup.getItemId());
+            if (orderedItem.getAmountAvailable() >= itemGroup.getAmount()) {
+                orderedItem.changeAmountAvailable(orderedItem.getAmountAvailable() - itemGroup.getAmount());
                 // OK TO THROW EXCEPTION?
                 itemRepository.save(orderedItem);
             }
         }
-    }
-
-    private List<ItemGroupDTO> createItemGroupsFromOrder(List<CreateItemGroupDTO> createItemGroupDTOList1) {
-        List<ItemGroup> savedItemGroupList = saveItemGroupsInRepository(createItemGroupDTOList1);
-        return itemMapper.toItemGroupDTO(savedItemGroupList);
-    }
-
-    private List<ItemGroup> saveItemGroupsInRepository(List<CreateItemGroupDTO> createItemGroupDTOList) {
-        return itemMapper.toItemGroup(createItemGroupDTOList).stream()
-                .map(itemGroupRepository::save).toList();
     }
 }

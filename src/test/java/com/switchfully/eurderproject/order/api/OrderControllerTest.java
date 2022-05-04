@@ -5,9 +5,10 @@ import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.Item;
-import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item.service.ItemMapper;
+import com.switchfully.eurderproject.item_group.domain.ItemGroup;
+import com.switchfully.eurderproject.item_group.service.ItemGroupMapper;
 import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
 import com.switchfully.eurderproject.order.api.dto.OrderDTO;
 import com.switchfully.eurderproject.order.domain.Order;
@@ -41,6 +42,9 @@ class OrderControllerTest {
 
     @Autowired
     private ItemMapper itemMapper;
+
+    @Autowired
+    private ItemGroupMapper itemGroupMapper;
 
     @Test
     void createOrder_givenOrderToSave_thenOrderIsCreatedAndSavedCorrectly() {
@@ -85,13 +89,7 @@ class OrderControllerTest {
         // THEN
         Assertions.assertThat(orderDTO.getId()).isNotBlank();
 
-        String expectedCustomerId = customer.getId();
-        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(expectedCustomerId);
-
-        item.changeAmountAvailable(10);
-        List<ItemGroup> itemGroupList = itemMapper.toItemGroup(createItemGroupDTOList);
-        List<ItemGroupDTO> itemGroupDTOList = itemMapper.toItemGroupDTO(itemGroupList);
-        Assertions.assertThat(orderDTO.getItemGroupDTOList()).isEqualTo(Lists.newArrayList(itemGroupDTOList));
+        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customer.getId());
 
         Assertions.assertThat(orderDTO.getTotalPrice()).isEqualTo(1);
     }
@@ -107,10 +105,9 @@ class OrderControllerTest {
         CreateItemGroupDTO createItemGroupDTO1 = new CreateItemGroupDTO().setItemId(item1.getId()).setAmount(5);
         CreateItemGroupDTO createItemGroupDTO2 = new CreateItemGroupDTO().setItemId(item2.getId()).setAmount(7);
         List<CreateItemGroupDTO> createItemGroupDTOList = Lists.newArrayList(createItemGroupDTO1, createItemGroupDTO2);
-        List<ItemGroup> itemGroupList = itemMapper.toItemGroup(createItemGroupDTOList);
-        List<ItemGroupDTO> itemGroupDTOList = itemMapper.toItemGroupDTO(itemGroupList);
+        List<ItemGroup> itemGroupList = itemGroupMapper.toItemGroup(createItemGroupDTOList);
 
-        Order order = new Order(customer.getId(), itemGroupDTOList);
+        Order order = new Order(customer.getId(), itemGroupList);
 
         Assertions.assertThat(order.getTotalPrice()).isEqualTo(1.605);
 

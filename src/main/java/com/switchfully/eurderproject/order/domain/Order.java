@@ -2,6 +2,7 @@ package com.switchfully.eurderproject.order.domain;
 
 
 import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
+import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,19 +15,19 @@ public class Order {
 
     private final String id;
     private final String customerId;
-    private final List<ItemGroupDTO> itemGroupDTOList;
+    private final List<ItemGroup> itemGroupList;
     private final double totalPrice;
 
-    public Order(String customerId, List<ItemGroupDTO> itemGroupDTOList) {
+    public Order(String customerId, List<ItemGroup> itemGroupList) {
         this.id = UUID.randomUUID().toString();
         this.customerId = customerId;
-        this.itemGroupDTOList = itemGroupDTOList;
+        this.itemGroupList = itemGroupList;
         this.totalPrice = calculateTotalPrice();
         orderLogger.info("Successfully created new order");
     }
 
     public double calculateTotalPrice() {
-        return itemGroupDTOList.stream()
+        return itemGroupList.stream()
                 .map(itemGroup -> itemGroup.getPricePerUnit() * itemGroup.getAmount())
                 .reduce(0.0, Double::sum);
     }
@@ -39,8 +40,8 @@ public class Order {
         return customerId;
     }
 
-    public List<ItemGroupDTO> getItemGroupDTOList() {
-        return itemGroupDTOList;
+    public List<ItemGroup> getItemGroupList() {
+        return itemGroupList;
     }
 
     public double getTotalPrice() {
@@ -65,7 +66,7 @@ public class Order {
         return "Order{" +
                 "id='" + id + '\'' +
                 ", customerId='" + customerId + '\'' +
-                ", itemGroupDTOList=" + itemGroupDTOList +
+                ", itemGroupDTOList=" + itemGroupList +
                 '}';
     }
 }

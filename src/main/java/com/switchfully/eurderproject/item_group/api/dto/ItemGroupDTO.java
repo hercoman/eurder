@@ -2,6 +2,7 @@ package com.switchfully.eurderproject.item_group.api.dto;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 public class ItemGroupDTO {
     private String id;
