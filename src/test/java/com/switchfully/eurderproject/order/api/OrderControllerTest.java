@@ -17,6 +17,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,7 @@ import static io.restassured.http.ContentType.JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase
 class OrderControllerTest {
 
     @LocalServerPort
@@ -53,8 +55,6 @@ class OrderControllerTest {
         // GIVEN
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
-        Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
-        customerRepository.save(customer);
 
         CreateItemGroupDTO createItemGroupDTO1 = new CreateItemGroupDTO()
                 .setItemId(item.getId())
@@ -67,7 +67,7 @@ class OrderControllerTest {
 
         // WHEN
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
-                .setCustomerId(customer.getId())
+                .setCustomerId("123e4567-e89b-12d3-a456-426614174000")
                 .setCreateItemGroupDTOList(createItemGroupDTOList);
 
         OrderDTO orderDTO =
@@ -89,7 +89,7 @@ class OrderControllerTest {
         // THEN
         Assertions.assertThat(orderDTO.getId()).isNotBlank();
 
-        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customer.getId());
+        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customerRepository.getCustomerById("123e4567-e89b-12d3-a456-426614174000").getId());
 
         Assertions.assertThat(orderDTO.getTotalPrice()).isEqualTo(1);
 
@@ -124,11 +124,9 @@ class OrderControllerTest {
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
         itemRepository.save(item);
-        Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
-        customerRepository.save(customer);
         CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO().setItemId(item.getId()).setAmount(5);
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
-                .setCustomerId(customer.getId())
+                .setCustomerId("123e4567-e89b-12d3-a456-426614174000")
                 .setCreateItemGroupDTOList(Lists.newArrayList(createItemGroupDTO));
 
         OrderDTO orderDTO =

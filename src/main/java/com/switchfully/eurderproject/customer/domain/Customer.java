@@ -5,19 +5,32 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+@Entity
+@Table(name = "CUSTOMER")
 public class Customer {
+    @Transient
     private final Logger customerLogger = LoggerFactory.getLogger(Customer.class);
 
-    private final String id;
-    private final String firstName;
-    private final String lastName;
-    private final String email;
-    private final String address;
-    private final String phoneNumber;
+    @Id
+    private String id;
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+    @Column(name = "LAST_NAME")
+    private String lastName;
+    @Column(name = "EMAIL")
+    private String email;
+    @Column(name = "ADDRESS")
+    private String address;
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+
+    public Customer() {
+    }
 
     public Customer(String firstName, String lastName, String email, String address, String phoneNumber) {
         this.id = UUID.randomUUID().toString();

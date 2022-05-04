@@ -6,39 +6,46 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
 public class CustomerRepository {
     private final Logger customerRepositoryLogger = LoggerFactory.getLogger(CustomerRepository.class);
 
-    private final Map<String, Customer> customersById;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public CustomerRepository() {
-        this.customersById = new HashMap<>();
+    public CustomerRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     public void save(Customer customer) {
-        customersById.put(customer.getId(), customer);
+        entityManager.persist(customer);
     }
 
     public boolean isEmailUnique(String email) {
-        return customersById.values().stream()
+        return getAll().stream()
                 .anyMatch(customer -> customer.getEmail().equalsIgnoreCase(email));
     }
 
     public Collection<Customer> getAll() {
-        return customersById.values();
+        return entityManager.createQuery("select c from Customer c", Customer.class)
+                .getResultList();
     }
 
     public Customer getCustomerById(String customerId) {
-        Customer foundCustomer = customersById.get(customerId);
-        if(foundCustomer == null){
+        List<Customer> foundCustomers = entityManager.createQuery("select c from Customer c where c.id = :id", Customer.class)
+                .setParameter("id", customerId)
+                .getResultList();
+        if (foundCustomers.size() == 0) {
             customerRepositoryLogger.error("No customer could be found for id " + customerId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find customer for id " + customerId);
         }
-        return foundCustomer ;
+        return foundCustomers.get(0);
     }
 }

@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
@@ -22,16 +23,17 @@ import static io.restassured.http.ContentType.JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase
 class CustomerControllerTest {
 
     @LocalServerPort
     private int port;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    CustomerRepository customerRepository;
 
     @Autowired
-    private CustomerMapper customerMapper;
+    CustomerMapper customerMapper;
 
     @Test
     void createCustomer_givenACustomerToCreate_thenTheNewlyCreatedCustomerIsSavedAndReturned() {
@@ -131,12 +133,10 @@ class CustomerControllerTest {
 
     @Test
     void createCustomer_givenACustomerWithExistingEmail_thenGetHttpStatusBadRequest() {
-        Customer repoCustomer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
-        customerRepository.save(repoCustomer);
         CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
                 .setFirstName("John")
                 .setLastName("McClane")
-                .setEmail("john.mcclane@diehard.com")
+                .setEmail("John.McTest@diehard.com")
                 .setAddress("Hero Street, 26000 USA")
                 .setPhoneNumber("0800-999");
 
@@ -199,10 +199,6 @@ class CustomerControllerTest {
     void getAllCustomers_customersAreShownCorrectly() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
-        List<Customer> customerList = Lists.newArrayList(
-                new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999"),
-                new Customer("Jake", "Peralte", "jake.peralta@diehard.com", "Brooklyn Street, 26000 USA", "0800-999"));
-        customerList.forEach(customer -> customerRepository.save(customer));
 
         CustomerDTO[] result = RestAssured
                 .given()
@@ -217,7 +213,7 @@ class CustomerControllerTest {
                 .extract()
                 .as(CustomerDTO[].class);
 
-        List<CustomerDTO> expectedList = customerMapper.toDTO(customerList);
+        List<CustomerDTO> expectedList = customerMapper.toDTO(customerRepository.getAll());
         Assertions.assertThat(List.of(result)).hasSameElementsAs(expectedList);
     }
 
@@ -225,11 +221,8 @@ class CustomerControllerTest {
     void getSingleCustomer_customerIsShownCorrectly() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
-        Customer testCustomer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
-        List<Customer> customerList = Lists.newArrayList(
-                testCustomer,
-                new Customer("Jake", "Peralte", "jake.peralta@diehard.com", "Brooklyn Street, 26000 USA", "0800-999"));
-        customerList.forEach(customer -> customerRepository.save(customer));
+        Customer actualCustomer = customerRepository.getCustomerById("123e4567-e89b-12d3-a456-426614174000");
+        Customer expectedCustomer = new Customer("John", "McClane", "John.McTest@diehard.com", "Hero Street, 26000 USA", "0800-999");
 
         CustomerDTO result = RestAssured
                 .given()
@@ -237,24 +230,18 @@ class CustomerControllerTest {
                 .when()
                 .accept(JSON)
                 .headers(httpHeaders)
-                .get("/customers/" + testCustomer.getId())
+                .get("/customers/" + actualCustomer.getId())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
                 .as(CustomerDTO.class);
 
-        Assertions.assertThat(result).isEqualTo(customerMapper.toDTO(testCustomer));
+        Assertions.assertThat(result).isEqualTo(customerMapper.toDTO(expectedCustomer));
     }
 
     @Test
     void getSingleCustomerWithNonExistingId_ThenGetHttpStatusBadRequest() {
-        Customer testCustomer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
-        List<Customer> customerList = Lists.newArrayList(
-                testCustomer,
-                new Customer("Jake", "Peralte", "jake.peralta@diehard.com", "Brooklyn Street, 26000 USA", "0800-999"));
-        customerList.forEach(customer -> customerRepository.save(customer));
-
         RestAssured
                 .given()
                 .port(port)
