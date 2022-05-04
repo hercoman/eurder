@@ -20,29 +20,15 @@ public class ItemGroupMapper {
         this.itemRepository = itemRepository;
     }
 
-    public ItemGroup toItemGroup(CreateItemGroupDTO createItemGroupDTO) {
+    public ItemGroup toItemGroup(CreateItemGroupDTO createItemGroupDTO, double pricePerUnit, int amountAvailableInStock) {
         return new ItemGroup(
                 createItemGroupDTO.getItemId(),
                 createItemGroupDTO.getAmount(),
-                itemRepository.getById(createItemGroupDTO.getItemId()).getPrice(),
-                calculateShippingDate(createItemGroupDTO.getAmount(), itemRepository.getById(createItemGroupDTO.getItemId()).getAmountAvailable())
-                );
+                pricePerUnit,
+                amountAvailableInStock);
     }
 
-    public List<ItemGroup> toItemGroup(Collection<CreateItemGroupDTO> createItemGroupDTOCollection) {
-        return createItemGroupDTOCollection.stream()
-                .map(this::toItemGroup)
-                .collect(Collectors.toList());
-    }
-
-    private LocalDate calculateShippingDate(int amount, int amountAvailable) {
-        if (amount <= amountAvailable) {
-            return LocalDate.now().plusDays(1);
-        }
-        return LocalDate.now().plusDays(7);
-    }
-
-    public ItemGroupDTO toItemGroupDTO(com.switchfully.eurderproject.item_group.domain.ItemGroup itemGroup) {
+    public ItemGroupDTO toItemGroupDTO(ItemGroup itemGroup) {
         return new ItemGroupDTO()
                 .setId(itemGroup.getId())
                 .setItemId(itemGroup.getItemId())
@@ -51,7 +37,7 @@ public class ItemGroupMapper {
                 .setShippingDate(itemGroup.getShippingDate());
     }
 
-    public List<ItemGroupDTO> toItemGroupDTO(Collection<com.switchfully.eurderproject.item_group.domain.ItemGroup> itemGroupCollection) {
+    public List<ItemGroupDTO> toItemGroupDTO(Collection<ItemGroup> itemGroupCollection) {
         return itemGroupCollection.stream()
                 .map(this::toItemGroupDTO)
                 .collect(Collectors.toList());

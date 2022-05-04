@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,7 +46,13 @@ public class OrderService {
     public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
         assertCustomerExists(createOrderDTO.getCustomerId());
         assertItemsExist(createOrderDTO.getCreateItemGroupDTOList());
-        List<ItemGroup> itemGroupList = itemGroupMapper.toItemGroup(createOrderDTO.getCreateItemGroupDTOList());
+        List<ItemGroup> itemGroupList = new ArrayList<>();
+        for (CreateItemGroupDTO createItemGroupDTO : createOrderDTO.getCreateItemGroupDTOList()) {
+            double pricePerUnit = itemRepository.getById(createItemGroupDTO.getItemId()).getPrice();
+            int amountAvailable = itemRepository.getById(createItemGroupDTO.getItemId()).getAmountAvailable();
+            ItemGroup itemGroup = itemGroupMapper.toItemGroup(createItemGroupDTO, pricePerUnit, amountAvailable);
+            itemGroupList.add(itemGroup);
+        }
         itemGroupList.forEach(itemGroupRepository::save);
         orderItems(itemGroupList);
         Order order = new Order(customerRepository.getById(createOrderDTO.getCustomerId()).getId(), itemGroupList);

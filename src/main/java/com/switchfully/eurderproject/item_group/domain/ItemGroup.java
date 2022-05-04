@@ -18,12 +18,12 @@ public class ItemGroup {
     private final double pricePerUnit;
     private final LocalDate shippingDate;
 
-    public ItemGroup(String itemId, int amount, double pricePerUnit, LocalDate shippingDate) {
+    public ItemGroup(String itemId, int amount, double pricePerUnit, int amountAvailableInStock) {
         this.id = UUID.randomUUID().toString();
         this.itemId = itemId;
         this.amount = validateAmount(amount);
         this.pricePerUnit = pricePerUnit;
-        this.shippingDate = shippingDate;
+        this.shippingDate = calculateShippingDate(amount, amountAvailableInStock);
     }
 
     private int validateAmount(int amount) {

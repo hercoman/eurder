@@ -23,7 +23,7 @@ class ItemGroupRepositoryTest {
 
     @Test
     void createItemGroup_givenAnItemGroupToCreate_thenTheNewlyCreatedItemGroupIsSavedCorrectly() {
-        ItemGroup itemGroup = new ItemGroup("123", 10, 0.25, LocalDate.now().plusDays(1));
+        ItemGroup itemGroup = new ItemGroup("123", 10, 0.25, 100);
         itemGroupRepository.save(itemGroup);
 
         ItemGroup savedItemGroup = itemGroupRepository.getById(itemGroup.getId());

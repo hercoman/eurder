@@ -110,8 +110,8 @@ class OrderControllerTest {
     void createOrder_givenOrderWithMultipleItems_thenOrderPriceCalculatedCorrectly() {
         // GIVEN
         List<ItemGroup> itemGroupList = Lists.newArrayList(
-                new ItemGroup(TEST_ITEM_ID1, 5, 0.125, LocalDate.now().plusDays(1)),
-                new ItemGroup(TEST_ITEM_ID2, 7, 0.14, LocalDate.now().plusDays(1)));
+                new ItemGroup(TEST_ITEM_ID1, 5, 0.125, 10),
+                new ItemGroup(TEST_ITEM_ID2, 7, 0.14, 30));
 
         Order order = new Order(TEST_CUSTOMER_ID, itemGroupList);
 
