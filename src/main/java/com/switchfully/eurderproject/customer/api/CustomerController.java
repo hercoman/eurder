@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.switchfully.eurderproject.security.Feature.*;
+import static com.switchfully.eurderproject.security.Feature.VIEW_CUSTOMERS;
+import static com.switchfully.eurderproject.security.Feature.VIEW_CUSTOMER_BY_ID;
 
 @RestController
 @RequestMapping(path = "customers")

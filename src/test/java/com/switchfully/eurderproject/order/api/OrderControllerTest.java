@@ -2,11 +2,11 @@ package com.switchfully.eurderproject.order.api;
 
 import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
-import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
-import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item.service.ItemMapper;
+import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
+import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import com.switchfully.eurderproject.item_group.service.ItemGroupMapper;
 import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
@@ -92,6 +92,10 @@ class OrderControllerTest {
         Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customer.getId());
 
         Assertions.assertThat(orderDTO.getTotalPrice()).isEqualTo(1);
+
+        List<ItemGroup> itemGroupList = itemGroupMapper.toItemGroup(createItemGroupDTOList);
+        List<ItemGroupDTO> expectedItemGroupDTOList = itemGroupMapper.toItemGroupDTO(itemGroupList);
+        Assertions.assertThat(orderDTO.getItemGroupDTOList()).isEqualTo(expectedItemGroupDTOList);
     }
 
     @Test

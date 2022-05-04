@@ -1,6 +1,5 @@
 package com.switchfully.eurderproject.item_group.domain;
 
-import com.switchfully.eurderproject.item.domain.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

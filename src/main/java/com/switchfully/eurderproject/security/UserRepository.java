@@ -5,7 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
-import static com.switchfully.eurderproject.security.Role.*;
+import static com.switchfully.eurderproject.security.Role.ADMIN;
+import static com.switchfully.eurderproject.security.Role.CUSTOMER;
 
 @Repository
 public class UserRepository {

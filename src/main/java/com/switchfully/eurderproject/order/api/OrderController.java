@@ -7,7 +7,7 @@ import com.switchfully.eurderproject.security.SecurityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import static com.switchfully.eurderproject.security.Feature.*;
+import static com.switchfully.eurderproject.security.Feature.ORDER_ITEMS;
 
 @RestController
 @RequestMapping(path = "orders")

@@ -1,7 +1,6 @@
 package com.switchfully.eurderproject.order.domain;
 
 
-import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,7 +2,6 @@ package com.switchfully.eurderproject.item_group.api.dto;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.UUID;
 
 public class ItemGroupDTO {
     private String id;
@@ -61,12 +60,12 @@ public class ItemGroupDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemGroupDTO that = (ItemGroupDTO) o;
-        return amount == that.amount && Double.compare(that.pricePerUnit, pricePerUnit) == 0 && Objects.equals(itemId, that.itemId) && Objects.equals(shippingDate, that.shippingDate);
+        return amount == that.amount && Double.compare(that.pricePerUnit, pricePerUnit) == 0 && Objects.equals(itemId, that.itemId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemId, amount, pricePerUnit, shippingDate);
+        return Objects.hash(itemId, amount, pricePerUnit);
     }
 
     @Override

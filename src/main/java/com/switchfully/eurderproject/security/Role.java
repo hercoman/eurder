@@ -1,7 +1,6 @@
 package com.switchfully.eurderproject.security;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.switchfully.eurderproject.security.Feature.*;
