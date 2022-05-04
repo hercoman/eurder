@@ -33,8 +33,8 @@ class ItemControllerTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         CreateItemDTO createItemDTO = new CreateItemDTO()
-                .setName("Tomato")
-                .setDescription("A clean, round tomato with lots of vitamins")
+                .setName("Carrot")
+                .setDescription("It's a carrot")
                 .setPrice(0.125)
                 .setAmountAvailable(10);
 
@@ -83,8 +83,6 @@ class ItemControllerTest {
 
     @Test
     void createItem_givenItemWithExistingName_thenGetHttpStatusBadRequest() {
-        Item repoItem = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
-        itemRepository.save(repoItem);
 
         CreateItemDTO createItemDTO = new CreateItemDTO()
                 .setName("Tomato")

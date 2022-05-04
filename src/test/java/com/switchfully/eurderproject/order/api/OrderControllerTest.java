@@ -145,7 +145,7 @@ class OrderControllerTest {
                         .extract()
                         .as(OrderDTO.class);
 
-        Assertions.assertThat(itemRepository.getItemById(item.getId()).getAmountAvailable()).isEqualTo(5);
+        Assertions.assertThat(itemRepository.getById(item.getId()).getAmountAvailable()).isEqualTo(5);
     }
 
     @Test

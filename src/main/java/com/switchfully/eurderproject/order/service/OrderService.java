@@ -3,6 +3,7 @@ package com.switchfully.eurderproject.order.service;
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
+import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import com.switchfully.eurderproject.item_group.domain.ItemGroupRepository;
 import com.switchfully.eurderproject.item_group.service.ItemGroupMapper;
@@ -41,6 +42,7 @@ public class OrderService {
 
     public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
         assertCustomerExists(createOrderDTO.getCustomerId());
+        assertItemsExist(createOrderDTO.getCreateItemGroupDTOList());
         List<ItemGroup> itemGroupList = itemGroupMapper.toItemGroup(createOrderDTO.getCreateItemGroupDTOList());
         itemGroupList.forEach(itemGroupRepository::save);
         orderItems(itemGroupList);
@@ -56,9 +58,19 @@ public class OrderService {
         }
     }
 
+    private void assertItemsExist(List<CreateItemGroupDTO> createItemGroupDTOList) {
+        for (CreateItemGroupDTO item : createItemGroupDTOList) {
+            String createItemId = item.getItemId();
+            if (!itemRepository.existsById(createItemId)) {
+                orderServiceLogger.error("No item could be found for id " + createItemId);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No item found for id " + createItemId);
+            }
+        }
+    }
+
     private void orderItems(List<ItemGroup> itemGroupList) {
         for (ItemGroup itemGroup : itemGroupList) {
-            Item orderedItem = itemRepository.getItemById(itemGroup.getItemId());
+            Item orderedItem = itemRepository.getById(itemGroup.getItemId());
             if (orderedItem.getAmountAvailable() >= itemGroup.getAmount()) {
                 orderedItem.changeAmountAvailable(orderedItem.getAmountAvailable() - itemGroup.getAmount());
                 // OK TO THROW EXCEPTION?

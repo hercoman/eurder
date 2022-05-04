@@ -30,8 +30,8 @@ public class ItemGroupMapper {
         return new ItemGroup(
                 createItemGroupDTO.getItemId(),
                 validateAmount(createItemGroupDTO.getAmount()),
-                itemRepository.getItemById(createItemGroupDTO.getItemId()).getPrice(),
-                calculateShippingDate(createItemGroupDTO.getAmount(), itemRepository.getItemById(createItemGroupDTO.getItemId()).getAmountAvailable())
+                itemRepository.getById(createItemGroupDTO.getItemId()).getPrice(),
+                calculateShippingDate(createItemGroupDTO.getAmount(), itemRepository.getById(createItemGroupDTO.getItemId()).getAmountAvailable())
                 );
     }
 

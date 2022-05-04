@@ -5,17 +5,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "ITEM")
 public class Item {
+    @Transient
     private final Logger itemLogger = LoggerFactory.getLogger(Item.class);
 
-    private final String id;
-    private final String name;
-    private final String description;
-    private final double price;
+    @Id
+    private String id;
+    @Column(name = "NAME")
+    private String name;
+    @Column(name = "DESCRIPTION")
+    private String description;
+    @Column(name = "PRICE")
+    private double price;
+    @Column(name = "AMOUNT")
     private int amountAvailable;
+
+    public Item() {
+    }
 
     public Item(String name, String description, double price, int amountAvailable) {
         this.id = UUID.randomUUID().toString();
