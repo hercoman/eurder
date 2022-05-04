@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 @Transactional
 public class CustomerService {
-    private final Logger serviceLogger = LoggerFactory.getLogger(CustomerService.class);
+    private final Logger customerServiceLogger = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerMapper customerMapper;
     private final CustomerRepository customerRepository;
@@ -34,18 +34,23 @@ public class CustomerService {
     }
 
     private void assertEmailIsUnique(String email) {
-        if (customerRepository.isEmailUnique(email)) {
-            serviceLogger.error("Attempted to create customer with already existing e-mail address");
+        if (customerRepository.findAll().stream()
+                .anyMatch(customer -> customer.getEmail().equalsIgnoreCase(email))) {
+            customerServiceLogger.error("Attempted to create customer with already existing e-mail address");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to use given e-mail address for new customer's email address");
         }
-        serviceLogger.info("Successfully validated new customer's email address to be unique");
+        customerServiceLogger.info("Successfully validated new customer's email address to be unique");
     }
 
     public List<CustomerDTO> viewAll() {
-        return customerMapper.toDTO(customerRepository.getAll());
+        return customerMapper.toDTO(customerRepository.findAll());
     }
 
     public CustomerDTO viewCustomer(String customerId) {
-        return customerMapper.toDTO(customerRepository.getCustomerById(customerId));
+        if (!customerRepository.existsById(customerId)) {
+            customerServiceLogger.error("No customer could be found for id " + customerId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find customer for id " + customerId);
+        }
+        return customerMapper.toDTO(customerRepository.getById(customerId));
     }
 }

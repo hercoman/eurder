@@ -89,7 +89,7 @@ class OrderControllerTest {
         // THEN
         Assertions.assertThat(orderDTO.getId()).isNotBlank();
 
-        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customerRepository.getCustomerById("123e4567-e89b-12d3-a456-426614174000").getId());
+        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customerRepository.getById("123e4567-e89b-12d3-a456-426614174000").getId());
 
         Assertions.assertThat(orderDTO.getTotalPrice()).isEqualTo(1);
 

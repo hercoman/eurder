@@ -213,7 +213,7 @@ class CustomerControllerTest {
                 .extract()
                 .as(CustomerDTO[].class);
 
-        List<CustomerDTO> expectedList = customerMapper.toDTO(customerRepository.getAll());
+        List<CustomerDTO> expectedList = customerMapper.toDTO(customerRepository.findAll());
         Assertions.assertThat(List.of(result)).hasSameElementsAs(expectedList);
     }
 
@@ -221,7 +221,7 @@ class CustomerControllerTest {
     void getSingleCustomer_customerIsShownCorrectly() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
-        Customer actualCustomer = customerRepository.getCustomerById("123e4567-e89b-12d3-a456-426614174000");
+        Customer actualCustomer = customerRepository.getById("123e4567-e89b-12d3-a456-426614174000");
         Customer expectedCustomer = new Customer("John", "McClane", "John.McTest@diehard.com", "Hero Street, 26000 USA", "0800-999");
 
         CustomerDTO result = RestAssured

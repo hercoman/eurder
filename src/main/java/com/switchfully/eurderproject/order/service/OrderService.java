@@ -10,12 +10,18 @@ import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
 import com.switchfully.eurderproject.order.api.dto.OrderDTO;
 import com.switchfully.eurderproject.order.domain.Order;
 import com.switchfully.eurderproject.order.domain.OrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 public class OrderService {
+
+    private final Logger orderServiceLogger = LoggerFactory.getLogger(OrderService.class);
 
     private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
@@ -34,12 +40,20 @@ public class OrderService {
     }
 
     public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
+        assertCustomerExists(createOrderDTO.getCustomerId());
         List<ItemGroup> itemGroupList = itemGroupMapper.toItemGroup(createOrderDTO.getCreateItemGroupDTOList());
         itemGroupList.forEach(itemGroupRepository::save);
         orderItems(itemGroupList);
-        Order order = new Order(customerRepository.getCustomerById(createOrderDTO.getCustomerId()).getId(), itemGroupList);
+        Order order = new Order(customerRepository.getById(createOrderDTO.getCustomerId()).getId(), itemGroupList);
         orderRepository.save(order);
         return orderMapper.toDTO(order);
+    }
+
+    private void assertCustomerExists(String customerId) {
+        if (!customerRepository.existsById(customerId)) {
+            orderServiceLogger.error("No customer could be found for id " + customerId);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find customer for id " + customerId);
+        }
     }
 
     private void orderItems(List<ItemGroup> itemGroupList) {
