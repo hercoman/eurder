@@ -8,7 +8,8 @@ Story 1 - Create a customer account (MUST-HAVE)
 		-String email
 		-String address
 		-String phoneNumber
-	
+
+	database: customer
 	endpoint: POST customers
 	comments: cover edge cases, use regex for email
 	estimation: large
@@ -25,7 +26,8 @@ Story 2 - Add an item (MUST-HAVE)
 		-String description
 		-double price
 		-int amount
-		
+
+	database: item
 	endpoint: POST items
 	comments: cover edge cases
 	estimation: medium
@@ -44,7 +46,10 @@ Story 3 - Order items (MUST-HAVE)
 		-int amount
 		-double pricePerUnit
 		-LocalDate shippingDate
-		
+
+	database:
+	    -item_group (fk_item_id, ManyToOne ItemGroup - Item) (fk_order_id, OneToMany Order - ItemGroup)
+	    -order (fk_customer_id, ManyToOne Order - Customer)
 	method: calculateTotalPrice()
 	endpoint: POST orders
 	comments: shipping date: +1 day if in stock, +7 days if out of stock
