@@ -2,12 +2,9 @@ package com.switchfully.eurderproject.item.api;
 
 import com.switchfully.eurderproject.item.api.dto.CreateItemDTO;
 import com.switchfully.eurderproject.item.api.dto.ItemDTO;
-import com.switchfully.eurderproject.item.domain.Item;
-import com.switchfully.eurderproject.item.domain.ItemRepository;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -24,9 +21,6 @@ class ItemControllerTest {
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private ItemRepository itemRepository;
 
     @Test
     void createItem_givenItemToCreate_thenTheNewlyCreatedItemIsSavedAndReturned() {

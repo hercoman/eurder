@@ -4,11 +4,7 @@ import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
 import com.switchfully.eurderproject.item_group.domain.ItemGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -17,8 +13,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class ItemGroupMapper {
-
-    private final Logger itemGroupMapperLogger = LoggerFactory.getLogger(ItemGroupMapper.class);
 
     private final ItemRepository itemRepository;
 
@@ -29,7 +23,7 @@ public class ItemGroupMapper {
     public ItemGroup toItemGroup(CreateItemGroupDTO createItemGroupDTO) {
         return new ItemGroup(
                 createItemGroupDTO.getItemId(),
-                validateAmount(createItemGroupDTO.getAmount()),
+                createItemGroupDTO.getAmount(),
                 itemRepository.getById(createItemGroupDTO.getItemId()).getPrice(),
                 calculateShippingDate(createItemGroupDTO.getAmount(), itemRepository.getById(createItemGroupDTO.getItemId()).getAmountAvailable())
                 );
@@ -46,15 +40,6 @@ public class ItemGroupMapper {
             return LocalDate.now().plusDays(1);
         }
         return LocalDate.now().plusDays(7);
-    }
-
-    private int validateAmount(int amount) {
-        if (amount < 0) {
-            itemGroupMapperLogger.error("Negative amount input for item group");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create item group with negative amount");
-        }
-        itemGroupMapperLogger.info("Successfully validated new item group amount");
-        return amount;
     }
 
     public ItemGroupDTO toItemGroupDTO(com.switchfully.eurderproject.item_group.domain.ItemGroup itemGroup) {

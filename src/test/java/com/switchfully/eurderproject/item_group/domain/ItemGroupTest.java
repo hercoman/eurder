@@ -1,11 +1,6 @@
 package com.switchfully.eurderproject.item_group.domain;
 
-import com.switchfully.eurderproject.customer.domain.CustomerRepository;
-import com.switchfully.eurderproject.item.domain.Item;
-import com.switchfully.eurderproject.item.domain.ItemRepository;
-import com.switchfully.eurderproject.item.service.ItemService;
 import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
-import com.switchfully.eurderproject.item_group.service.ItemGroupMapper;
 import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
 import com.switchfully.eurderproject.order.service.OrderService;
 import org.assertj.core.api.Assertions;
@@ -18,7 +13,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

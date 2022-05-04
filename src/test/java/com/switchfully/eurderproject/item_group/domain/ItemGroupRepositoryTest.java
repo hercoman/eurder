@@ -1,8 +1,5 @@
 package com.switchfully.eurderproject.item_group.domain;
 
-import com.switchfully.eurderproject.item.domain.Item;
-import com.switchfully.eurderproject.item.domain.ItemRepository;
-import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +10,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase
@@ -22,9 +17,6 @@ class ItemGroupRepositoryTest {
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private ItemRepository itemRepository;
 
     @Autowired
     private ItemGroupRepository itemGroupRepository;

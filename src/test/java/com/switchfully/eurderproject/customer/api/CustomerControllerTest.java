@@ -7,7 +7,6 @@ import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.customer.service.CustomerMapper;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

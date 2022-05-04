@@ -21,7 +21,7 @@ public class ItemGroup {
     public ItemGroup(String itemId, int amount, double pricePerUnit, LocalDate shippingDate) {
         this.id = UUID.randomUUID().toString();
         this.itemId = itemId;
-        this.amount = amount;
+        this.amount = validateAmount(amount);
         this.pricePerUnit = pricePerUnit;
         this.shippingDate = shippingDate;
     }
@@ -33,6 +33,13 @@ public class ItemGroup {
         }
         itemGroupLogger.info("Successfully validated new item group amount");
         return amount;
+    }
+
+    private LocalDate calculateShippingDate(int amount, int amountAvailable) {
+        if (amount <= amountAvailable) {
+            return LocalDate.now().plusDays(1);
+        }
+        return LocalDate.now().plusDays(7);
     }
 
     public String getId() {
