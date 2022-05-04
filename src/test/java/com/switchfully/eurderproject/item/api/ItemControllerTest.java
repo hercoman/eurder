@@ -33,8 +33,8 @@ class ItemControllerTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         CreateItemDTO createItemDTO = new CreateItemDTO()
-                .setName("Carrot")
-                .setDescription("It's a carrot")
+                .setName("Test tomato")
+                .setDescription("It's a test tomato")
                 .setPrice(0.125)
                 .setAmountAvailable(10);
 

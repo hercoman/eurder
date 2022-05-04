@@ -19,3 +19,9 @@ VALUES ('123e4567-e89b-12d3-a456-426614174002',
         'A clean, round tomato with lots of vitamins',
         0.125,
         10);
+INSERT INTO ITEM (id, name, description, price, amount)
+VALUES ('123e4567-e89b-12d3-a456-426614174003',
+        'Carrot',
+        'A carrot',
+        0.14,
+        30);

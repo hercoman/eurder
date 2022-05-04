@@ -12,6 +12,7 @@ import com.switchfully.eurderproject.item_group.service.ItemGroupMapper;
 import com.switchfully.eurderproject.order.api.dto.CreateOrderDTO;
 import com.switchfully.eurderproject.order.api.dto.OrderDTO;
 import com.switchfully.eurderproject.order.domain.Order;
+import com.switchfully.eurderproject.order.service.OrderService;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
@@ -24,6 +25,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static io.restassured.http.ContentType.JSON;
@@ -33,6 +35,9 @@ import static io.restassured.http.ContentType.JSON;
 @AutoConfigureTestDatabase
 class OrderControllerTest {
 
+    public static final String TEST_ITEM_ID1 = "123e4567-e89b-12d3-a456-426614174002";
+    public static final String TEST_ITEM_ID2 = "123e4567-e89b-12d3-a456-426614174003";
+    public static final String TEST_CUSTOMER_ID = "123e4567-e89b-12d3-a456-426614174000";
     @LocalServerPort
     private int port;
 
@@ -43,31 +48,26 @@ class OrderControllerTest {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private ItemMapper itemMapper;
-
-    @Autowired
-    private ItemGroupMapper itemGroupMapper;
+    private OrderService orderService;
 
     @Test
     void createOrder_givenOrderToSave_thenOrderIsCreatedAndSavedCorrectly() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         // GIVEN
-        Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
-        itemRepository.save(item);
 
         CreateItemGroupDTO createItemGroupDTO1 = new CreateItemGroupDTO()
-                .setItemId(item.getId())
+                .setItemId(TEST_ITEM_ID1)
                 .setAmount(5);
         CreateItemGroupDTO createItemGroupDTO2 = new CreateItemGroupDTO()
-                .setItemId(item.getId())
+                .setItemId(TEST_ITEM_ID1)
                 .setAmount(3);
 
         List<CreateItemGroupDTO> createItemGroupDTOList = Lists.newArrayList(createItemGroupDTO1, createItemGroupDTO2);
 
         // WHEN
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
-                .setCustomerId("123e4567-e89b-12d3-a456-426614174000")
+                .setCustomerId(TEST_CUSTOMER_ID)
                 .setCreateItemGroupDTOList(createItemGroupDTOList);
 
         OrderDTO orderDTO =
@@ -89,29 +89,34 @@ class OrderControllerTest {
         // THEN
         Assertions.assertThat(orderDTO.getId()).isNotBlank();
 
-        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customerRepository.getById("123e4567-e89b-12d3-a456-426614174000").getId());
+        Assertions.assertThat(orderDTO.getCustomerId()).isEqualTo(customerRepository.getById(TEST_CUSTOMER_ID).getId());
 
         Assertions.assertThat(orderDTO.getTotalPrice()).isEqualTo(1);
 
-        List<ItemGroup> itemGroupList = itemGroupMapper.toItemGroup(createItemGroupDTOList);
-        List<ItemGroupDTO> expectedItemGroupDTOList = itemGroupMapper.toItemGroupDTO(itemGroupList);
+        List<ItemGroupDTO> expectedItemGroupDTOList = Lists.newArrayList(
+                new ItemGroupDTO()
+                        .setId(orderDTO.getItemGroupDTOList().get(0).getId())
+                        .setItemId(TEST_ITEM_ID1)
+                        .setAmount(5)
+                        .setPricePerUnit(0.125)
+                        .setShippingDate(LocalDate.now().plusDays(1)),
+                new ItemGroupDTO()
+                        .setId(orderDTO.getItemGroupDTOList().get(1).getId())
+                        .setItemId(TEST_ITEM_ID1)
+                        .setAmount(3)
+                        .setPricePerUnit(0.125)
+                        .setShippingDate(LocalDate.now().plusDays(1)));
         Assertions.assertThat(orderDTO.getItemGroupDTOList()).isEqualTo(expectedItemGroupDTOList);
     }
 
     @Test
     void createOrder_givenOrderWithMultipleItems_thenOrderPriceCalculatedCorrectly() {
         // GIVEN
-        Item item1 = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
-        Item item2 = new Item("Carrot", "A carrot", 0.14, 30);
-        List<Item> items = Lists.newArrayList(item1, item2);
-        items.forEach(item -> itemRepository.save(item));
-        Customer customer = new Customer("John", "McClane", "john.mcclane@diehard.com", "Hero Street, 26000 USA", "0800-999");
-        CreateItemGroupDTO createItemGroupDTO1 = new CreateItemGroupDTO().setItemId(item1.getId()).setAmount(5);
-        CreateItemGroupDTO createItemGroupDTO2 = new CreateItemGroupDTO().setItemId(item2.getId()).setAmount(7);
-        List<CreateItemGroupDTO> createItemGroupDTOList = Lists.newArrayList(createItemGroupDTO1, createItemGroupDTO2);
-        List<ItemGroup> itemGroupList = itemGroupMapper.toItemGroup(createItemGroupDTOList);
+        List<ItemGroup> itemGroupList = Lists.newArrayList(
+                new ItemGroup(TEST_ITEM_ID1, 5, 0.125, LocalDate.now().plusDays(1)),
+                new ItemGroup(TEST_ITEM_ID2, 7, 0.14, LocalDate.now().plusDays(1)));
 
-        Order order = new Order(customer.getId(), itemGroupList);
+        Order order = new Order(TEST_CUSTOMER_ID, itemGroupList);
 
         Assertions.assertThat(order.getTotalPrice()).isEqualTo(1.605);
 
@@ -122,14 +127,11 @@ class OrderControllerTest {
         // GIVEN
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
-        Item item = new Item("Tomato", "A clean, round tomato with lots of vitamins", 0.125, 10);
-        itemRepository.save(item);
-        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO().setItemId(item.getId()).setAmount(5);
+        CreateItemGroupDTO createItemGroupDTO = new CreateItemGroupDTO().setItemId(TEST_ITEM_ID1).setAmount(5);
         CreateOrderDTO createOrderDTO = new CreateOrderDTO()
-                .setCustomerId("123e4567-e89b-12d3-a456-426614174000")
+                .setCustomerId(TEST_CUSTOMER_ID)
                 .setCreateItemGroupDTOList(Lists.newArrayList(createItemGroupDTO));
 
-        OrderDTO orderDTO =
                 RestAssured
                         .given()
                         .port(port)
@@ -141,11 +143,9 @@ class OrderControllerTest {
                         .post("/orders")
                         .then()
                         .assertThat()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract()
-                        .as(OrderDTO.class);
+                        .statusCode(HttpStatus.CREATED.value());
 
-        Assertions.assertThat(itemRepository.getById(item.getId()).getAmountAvailable()).isEqualTo(5);
+        Assertions.assertThat(orderService.findAmountForItem(TEST_ITEM_ID1)).isEqualTo(5);
     }
 
     @Test
