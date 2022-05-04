@@ -17,6 +17,7 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
+        <!--        Spring Boot dependencies-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -28,22 +29,40 @@
             <scope>test</scope>
         </dependency>
 
+        <!--        test dependencies-->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>spring-mock-mvc</artifactId>
             <scope>test</scope>
         </dependency>
 
+        <!--        Swagger-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.4</version>
+            <version>1.6.7</version>
         </dependency>
 
+        <!--        Guava-->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>31.0.1-jre</version>
+        </dependency>
+
+        <!--        database dependencies-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
         </dependency>
     </dependencies>
 
