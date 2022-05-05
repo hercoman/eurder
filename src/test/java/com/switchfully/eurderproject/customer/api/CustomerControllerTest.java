@@ -256,4 +256,26 @@ class CustomerControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @Test
+    void createCustomer_givenACustomerWithNoStreetName_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setLastName("McClane")
+                .setEmail("john.mcclane@diehard.com")
+                .setAddressDTO(new AddressDTO("", "1", new PostalCodeDTO("26000", "USA")))
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
 }

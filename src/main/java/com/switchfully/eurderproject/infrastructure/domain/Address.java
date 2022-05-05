@@ -1,10 +1,17 @@
 package com.switchfully.eurderproject.infrastructure.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ADDRESS")
 public class Address {
+    @Transient
+    private final Logger addressLogger = LoggerFactory.getLogger(Address.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_seq")
@@ -25,9 +32,30 @@ public class Address {
     }
 
     public Address(String streetName, String streetNumber, PostalCode postalCode) {
-        this.streetName = streetName;
+        this.streetName = validateStreetName(streetName);
         this.streetNumber = streetNumber;
         this.postalCode = postalCode;
+    }
+
+    private String validateStreetName(String streetName) {
+        validateAndCheckLoggingMessage(
+                notFilledIn(streetName),
+                "Address can't be created without street name",
+                "No street name given for new address",
+                "Successfully validated new address's street name");
+        return streetName;
+    }
+
+    private void validateAndCheckLoggingMessage(boolean condition, String loggerErrorMessage, String jsonErrorMessage, String confirmationMessage) {
+        if (condition) {
+            addressLogger.error(loggerErrorMessage);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, jsonErrorMessage);
+        }
+        addressLogger.info(confirmationMessage);
+    }
+
+    private boolean notFilledIn(String string) {
+        return string == null || string.isEmpty();
     }
 
     public Long getId() {
