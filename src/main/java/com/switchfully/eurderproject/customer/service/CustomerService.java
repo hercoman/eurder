@@ -6,6 +6,11 @@ import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.infrastructure.api.dto.AddressDTO;
 import com.switchfully.eurderproject.infrastructure.api.dto.PostalCodeDTO;
+import com.switchfully.eurderproject.order.api.dto.OrderReportDTO;
+import com.switchfully.eurderproject.order.api.dto.ReportDTO;
+import com.switchfully.eurderproject.order.domain.Order;
+import com.switchfully.eurderproject.order.domain.OrderRepository;
+import com.switchfully.eurderproject.order.service.OrderMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,11 +26,15 @@ public class CustomerService {
     private final Logger customerServiceLogger = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerMapper customerMapper;
+    private final OrderMapper orderMapper;
     private final CustomerRepository customerRepository;
+    private final OrderRepository orderRepository;
 
-    public CustomerService(CustomerMapper customerMapper, CustomerRepository customerRepository) {
+    public CustomerService(CustomerMapper customerMapper, OrderMapper orderMapper, CustomerRepository customerRepository, OrderRepository orderRepository) {
         this.customerMapper = customerMapper;
+        this.orderMapper = orderMapper;
         this.customerRepository = customerRepository;
+        this.orderRepository = orderRepository;
     }
 
     public CustomerDTO createCustomer(CreateCustomerDTO createCustomerDTO) {
@@ -67,10 +76,24 @@ public class CustomerService {
     }
 
     public CustomerDTO viewCustomer(String customerId) {
+        assertCustomerExists(customerId);
+        return customerMapper.toDTO(customerRepository.getById(customerId));
+    }
+
+    public ReportDTO viewOrderReport(String customerId) {
+        assertCustomerExists(customerId);
+        List<Order> customerOrders = orderRepository.findByCustomer(customerRepository.getById(customerId));
+        List<OrderReportDTO> customerOrderDTOs = orderMapper.toOrderReportDTO(customerOrders);
+        double allOrderPrice = customerOrderDTOs.stream()
+                .map(OrderReportDTO::getTotalOrderPrice)
+                .reduce(0.0, Double::sum);
+        return orderMapper.toReport(customerOrderDTOs, allOrderPrice);
+    }
+
+    private void assertCustomerExists(String customerId) {
         if (!customerRepository.existsById(customerId)) {
             customerServiceLogger.error("No customer could be found for id " + customerId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find customer for id " + customerId);
         }
-        return customerMapper.toDTO(customerRepository.getById(customerId));
     }
 }

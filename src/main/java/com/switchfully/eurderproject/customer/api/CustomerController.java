@@ -3,6 +3,7 @@ package com.switchfully.eurderproject.customer.api;
 import com.switchfully.eurderproject.customer.api.dto.CreateCustomerDTO;
 import com.switchfully.eurderproject.customer.api.dto.CustomerDTO;
 import com.switchfully.eurderproject.customer.service.CustomerService;
+import com.switchfully.eurderproject.order.api.dto.ReportDTO;
 import com.switchfully.eurderproject.security.SecurityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +43,12 @@ public class CustomerController {
     public CustomerDTO viewCustomer(@RequestHeader String authorization, @PathVariable String customerId) {
         securityService.validateAuthorization(authorization, VIEW_CUSTOMER_BY_ID);
         return customerService.viewCustomer(customerId);
+    }
+
+    @GetMapping(path = "/{customerId}/report", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ReportDTO viewOrderReport(@RequestHeader String authorization, @PathVariable String customerId) {
+        securityService.validateAuthorization(authorization, VIEW_CUSTOMER_BY_ID);
+        return customerService.viewOrderReport(customerId);
     }
 }

@@ -10,8 +10,8 @@ import com.switchfully.eurderproject.infrastructure.api.dto.PostalCodeDTO;
 import com.switchfully.eurderproject.infrastructure.domain.Address;
 import com.switchfully.eurderproject.infrastructure.domain.PostalCode;
 import com.switchfully.eurderproject.item_group.api.dto.ItemGroupReportDTO;
+import com.switchfully.eurderproject.order.api.dto.OrderReportDTO;
 import com.switchfully.eurderproject.order.api.dto.ReportDTO;
-import com.switchfully.eurderproject.order.domain.Order;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
@@ -26,7 +26,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.restassured.http.ContentType.JSON;
 
@@ -365,6 +367,8 @@ class CustomerControllerTest {
     class GetOrderReportTest {
         @Test
         void viewOrderReport_showReportOfOrdersCorrectly() {
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
             Customer customer = customerRepository.getById(TEST_CUSTOMER_ID);
 
             ReportDTO result = RestAssured
@@ -372,6 +376,7 @@ class CustomerControllerTest {
                     .port(port)
                     .when()
                     .accept(JSON)
+                    .headers(httpHeaders)
                     .get("/customers/" + customer.getId() + "/report")
                     .then()
                     .assertThat()
@@ -379,14 +384,19 @@ class CustomerControllerTest {
                     .extract()
                     .as(ReportDTO.class);
 
-            List<ItemGroupReportDTO> actualItemGroupReportDTOList = result.getOrderReportDTOList().getItemGroupReportDTOList();
+            List<OrderReportDTO> actualOrderList = result.getOrderList();
+            List<List<ItemGroupReportDTO>> actualItemGroupReportDTOList1 = actualOrderList.stream()
+                    .map(OrderReportDTO::getOrderedItemGroups).toList();
+            List<ItemGroupReportDTO> actualItemGroupReportDTOList2 = actualItemGroupReportDTOList1.stream()
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
             List<ItemGroupReportDTO> expectedItemGroupReportDTOList = Lists.newArrayList(
                     new ItemGroupReportDTO(
                             "Tomato",
                             8,
                             1
                     ));
-            Assertions.assertThat(actualItemGroupReportDTOList).hasSameElementsAs(expectedItemGroupReportDTOList);
+            Assertions.assertThat(actualItemGroupReportDTOList2).hasSameElementsAs(expectedItemGroupReportDTOList);
         }
     }
 }
