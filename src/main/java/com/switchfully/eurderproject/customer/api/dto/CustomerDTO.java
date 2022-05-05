@@ -1,5 +1,8 @@
 package com.switchfully.eurderproject.customer.api.dto;
 
+import com.switchfully.eurderproject.infrastructure.api.dto.AddressDTO;
+import com.switchfully.eurderproject.infrastructure.domain.Address;
+
 import java.util.Objects;
 
 public class CustomerDTO {
@@ -7,7 +10,7 @@ public class CustomerDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private String address;
+    private AddressDTO address;
     private String phoneNumber;
 
     public String getId() {
@@ -26,7 +29,7 @@ public class CustomerDTO {
         return email;
     }
 
-    public String getAddress() {
+    public AddressDTO getAddress() {
         return address;
     }
 
@@ -54,7 +57,7 @@ public class CustomerDTO {
         return this;
     }
 
-    public CustomerDTO setAddress(String address) {
+    public CustomerDTO setAddress(AddressDTO address) {
         this.address = address;
         return this;
     }

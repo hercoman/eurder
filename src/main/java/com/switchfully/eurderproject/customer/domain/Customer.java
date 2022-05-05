@@ -1,5 +1,6 @@
 package com.switchfully.eurderproject.customer.domain;
 
+import com.switchfully.eurderproject.infrastructure.domain.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,15 +25,16 @@ public class Customer {
     private String lastName;
     @Column(name = "EMAIL")
     private String email;
-    @Column(name = "ADDRESS")
-    private String address;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "FK_ADDRESS_ID")
+    private Address address;
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName, String email, String address, String phoneNumber) {
+    public Customer(String firstName, String lastName, String email, Address address, String phoneNumber) {
         this.id = UUID.randomUUID().toString();
         this.firstName = validateFirstName(firstName);
         this.lastName = validateLastName(lastName);
@@ -69,9 +71,9 @@ public class Customer {
         return email;
     }
 
-    private String validateAddress(String address) {
+    private Address validateAddress(Address address) {
         validateAndCheckLoggingMessage(
-                notFilledIn(address),
+                (address == null),
                 "Customer can't be created without address",
                 "No address given for new customer",
                 "Successfully validated new customer's address");
@@ -129,7 +131,7 @@ public class Customer {
         return email;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 

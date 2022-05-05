@@ -1,10 +1,12 @@
 package com.switchfully.eurderproject.customer.api.dto;
 
+import com.switchfully.eurderproject.infrastructure.api.dto.AddressDTO;
+
 public class CreateCustomerDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private String address;
+    private AddressDTO address;
     private String phoneNumber;
 
     public CreateCustomerDTO setFirstName(String firstName) {
@@ -22,7 +24,7 @@ public class CreateCustomerDTO {
         return this;
     }
 
-    public CreateCustomerDTO setAddress(String address) {
+    public CreateCustomerDTO setAddressDTO(AddressDTO address) {
         this.address = address;
         return this;
     }
@@ -44,7 +46,7 @@ public class CreateCustomerDTO {
         return email;
     }
 
-    public String getAddress() {
+    public AddressDTO getAddress() {
         return address;
     }
 

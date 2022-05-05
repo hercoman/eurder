@@ -5,6 +5,10 @@ import com.switchfully.eurderproject.customer.api.dto.CustomerDTO;
 import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.customer.service.CustomerMapper;
+import com.switchfully.eurderproject.infrastructure.api.dto.AddressDTO;
+import com.switchfully.eurderproject.infrastructure.api.dto.PostalCodeDTO;
+import com.switchfully.eurderproject.infrastructure.domain.Address;
+import com.switchfully.eurderproject.infrastructure.domain.PostalCode;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,7 +44,7 @@ class CustomerControllerTest {
                 .setFirstName("John")
                 .setLastName("McClane")
                 .setEmail("john.mcclane@diehard.com")
-                .setAddress("Hero Street, 26000 USA")
+                .setAddressDTO(new AddressDTO("Hero Street", "1", new PostalCodeDTO("26000", "USA")))
                 .setPhoneNumber("0800-999");
 
         CustomerDTO customerDTO =
@@ -71,7 +75,7 @@ class CustomerControllerTest {
         CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
                 .setLastName("McClane")
                 .setEmail("john.mcclane@diehard.com")
-                .setAddress("Hero Street, 26000 USA")
+                .setAddressDTO(new AddressDTO("Hero Street", "1", new PostalCodeDTO("26000", "USA")))
                 .setPhoneNumber("0800-999");
 
         RestAssured
@@ -92,7 +96,7 @@ class CustomerControllerTest {
         CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
                 .setFirstName("John")
                 .setEmail("john.mcclane@diehard.com")
-                .setAddress("Hero Street, 26000 USA")
+                .setAddressDTO(new AddressDTO("Hero Street", "1", new PostalCodeDTO("26000", "USA")))
                 .setPhoneNumber("0800-999");
 
         RestAssured
@@ -114,7 +118,7 @@ class CustomerControllerTest {
                 .setFirstName("John")
                 .setLastName("McClane")
                 .setEmail("john.mcclane.diehard.com")
-                .setAddress("Hero Street, 26000 USA")
+                .setAddressDTO(new AddressDTO("Hero Street", "1", new PostalCodeDTO("26000", "USA")))
                 .setPhoneNumber("0800-999");
 
         RestAssured
@@ -136,7 +140,7 @@ class CustomerControllerTest {
                 .setFirstName("John")
                 .setLastName("McClane")
                 .setEmail("John.McTest@diehard.com")
-                .setAddress("Hero Street, 26000 USA")
+                .setAddressDTO(new AddressDTO("Hero Street", "1", new PostalCodeDTO("26000", "USA")))
                 .setPhoneNumber("0800-999");
 
         RestAssured
@@ -179,7 +183,7 @@ class CustomerControllerTest {
                 .setFirstName("John")
                 .setLastName("McClane")
                 .setEmail("john.mcclane@diehard.com")
-                .setAddress("Hero Street, 26000 USA");
+                .setAddressDTO(new AddressDTO("Hero Street", "1", new PostalCodeDTO("26000", "USA")));
 
         RestAssured
                 .given()
@@ -221,7 +225,7 @@ class CustomerControllerTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
         Customer actualCustomer = customerRepository.getById("123e4567-e89b-12d3-a456-426614174000");
-        Customer expectedCustomer = new Customer("John", "McClane", "John.McTest@diehard.com", "Hero Street, 26000 USA", "0800-999");
+        Customer expectedCustomer = new Customer("John", "McClane", "John.McTest@diehard.com", new Address("Hero Street", "1", new PostalCode("26000", "USA")), "0800-999");
 
         CustomerDTO result = RestAssured
                 .given()
