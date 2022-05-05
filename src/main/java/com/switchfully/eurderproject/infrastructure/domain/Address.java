@@ -38,20 +38,12 @@ public class Address {
     }
 
     private String validateStreetName(String streetName) {
-        validateAndCheckLoggingMessage(
-                notFilledIn(streetName),
-                "Address can't be created without street name",
-                "No street name given for new address",
-                "Successfully validated new address's street name");
-        return streetName;
-    }
-
-    private void validateAndCheckLoggingMessage(boolean condition, String loggerErrorMessage, String jsonErrorMessage, String confirmationMessage) {
-        if (condition) {
-            addressLogger.error(loggerErrorMessage);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, jsonErrorMessage);
+        if (notFilledIn(streetName)) {
+            addressLogger.error("Address can't be created without street name");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No street name given for new address");
         }
-        addressLogger.info(confirmationMessage);
+        addressLogger.info("Successfully validated new address's street name");
+        return streetName;
     }
 
     private boolean notFilledIn(String string) {

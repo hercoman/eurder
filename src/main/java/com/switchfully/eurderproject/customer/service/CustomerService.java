@@ -5,6 +5,7 @@ import com.switchfully.eurderproject.customer.api.dto.CustomerDTO;
 import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.infrastructure.api.dto.AddressDTO;
+import com.switchfully.eurderproject.infrastructure.api.dto.PostalCodeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class CustomerService {
     public CustomerDTO createCustomer(CreateCustomerDTO createCustomerDTO) {
         assertEmailIsUnique(createCustomerDTO.getEmail());
         assertAddressExists(createCustomerDTO.getAddress());
+        assertPostalCodeExists(createCustomerDTO.getAddress().getPostalCode());
         Customer customer = customerMapper.toCustomer(createCustomerDTO);
         customerRepository.save(customer);
         return customerMapper.toDTO(customer);
@@ -42,6 +44,14 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to use given e-mail address for new customer's email address");
         }
         customerServiceLogger.info("Successfully validated new customer's email address to be unique");
+    }
+
+    private void assertPostalCodeExists(PostalCodeDTO postalCode) {
+        if (postalCode == null) {
+            customerServiceLogger.error("Customer can't be created without postal code");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No postal code given for new customer");
+        }
+        customerServiceLogger.info("Successfully validated new customer's postal code");
     }
 
     private void assertAddressExists(AddressDTO address) {

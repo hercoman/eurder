@@ -278,4 +278,70 @@ class CustomerControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @Test
+    void createCustomer_givenACustomerWithNoPostalCode_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setLastName("McClane")
+                .setEmail("john.mcclane@diehard.com")
+                .setAddressDTO(new AddressDTO("Hero Street", "1", null))
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void createCustomer_givenACustomerWithNoZipCode_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setLastName("McClane")
+                .setEmail("john.mcclane@diehard.com")
+                .setAddressDTO(new AddressDTO("Hero Street", "1", new PostalCodeDTO("", "USA")))
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void createCustomer_givenACustomerWithNoCity_thenGetHttpStatusBadRequest() {
+        CreateCustomerDTO createCustomerDTO = new CreateCustomerDTO()
+                .setFirstName("John")
+                .setLastName("McClane")
+                .setEmail("john.mcclane@diehard.com")
+                .setAddressDTO(new AddressDTO("Hero Street", "1", new PostalCodeDTO("26000", "")))
+                .setPhoneNumber("0800-999");
+
+        RestAssured
+                .given()
+                .port(port)
+                .body(createCustomerDTO)
+                .contentType(JSON)
+                .when()
+                .accept(JSON)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
 }
