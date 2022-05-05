@@ -384,10 +384,8 @@ class CustomerControllerTest {
                     .extract()
                     .as(ReportDTO.class);
 
-            List<OrderReportDTO> actualOrderList = result.getOrderList();
-            List<List<ItemGroupReportDTO>> actualItemGroupReportDTOList1 = actualOrderList.stream()
-                    .map(OrderReportDTO::getOrderedItemGroups).toList();
-            List<ItemGroupReportDTO> actualItemGroupReportDTOList2 = actualItemGroupReportDTOList1.stream()
+            List<ItemGroupReportDTO> actualItemGroupReportDTOList = result.getOrderList().stream()
+                    .map(OrderReportDTO::getOrderedItemGroups).toList().stream()
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
             List<ItemGroupReportDTO> expectedItemGroupReportDTOList = Lists.newArrayList(
@@ -396,7 +394,7 @@ class CustomerControllerTest {
                             8,
                             1
                     ));
-            Assertions.assertThat(actualItemGroupReportDTOList2).hasSameElementsAs(expectedItemGroupReportDTOList);
+            Assertions.assertThat(actualItemGroupReportDTOList).hasSameElementsAs(expectedItemGroupReportDTOList);
         }
     }
 }
