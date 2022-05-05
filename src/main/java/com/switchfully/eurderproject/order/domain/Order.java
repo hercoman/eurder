@@ -22,7 +22,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "FK_CUSTOMER_ID")
     private Customer customer;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "FK_EURDER_ID", nullable = false)
     private List<ItemGroup> itemGroupList;
     @Column(name = "TOTAL_PRICE")
