@@ -36,3 +36,16 @@ VALUES ('123e4567-e89b-12d3-a456-426614174003',
         'A carrot',
         0.14,
         30);
+
+INSERT INTO EURDER (id, fk_customer_id, total_price)
+VALUES ('123e4567-e89b-12d3-a456-426614174004',
+        '123e4567-e89b-12d3-a456-426614174000',
+        1.0);
+INSERT INTO ITEM_GROUP (id, fk_item_id, fk_eurder_id, amount, price, shipping_date)
+VALUES ('123e4567-e89b-12d3-a456-426614174005',
+        '123e4567-e89b-12d3-a456-426614174002',
+        '123e4567-e89b-12d3-a456-426614174004',
+        8,
+        0.125,
+        '2022-05-06'
+       );
