@@ -1,7 +1,6 @@
 package com.switchfully.eurderproject.customer.api.dto;
 
 import com.switchfully.eurderproject.infrastructure.api.dto.AddressDTO;
-import com.switchfully.eurderproject.infrastructure.domain.Address;
 
 import java.util.Objects;
 

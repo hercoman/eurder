@@ -1,4 +1,3 @@
 remove repository calls from mappers
 
-refactor createOrder method with stream
-add Address class + database
+add validation for Address & PostalCode classes

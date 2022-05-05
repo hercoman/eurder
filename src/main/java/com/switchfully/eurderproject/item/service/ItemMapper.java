@@ -3,17 +3,10 @@ package com.switchfully.eurderproject.item.service;
 import com.switchfully.eurderproject.item.api.dto.CreateItemDTO;
 import com.switchfully.eurderproject.item.api.dto.ItemDTO;
 import com.switchfully.eurderproject.item.domain.Item;
-import com.switchfully.eurderproject.item.domain.ItemRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ItemMapper {
-
-    private final ItemRepository itemRepository;
-
-    public ItemMapper(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
-    }
 
     public Item toItem(CreateItemDTO createItemDTO) {
         return new Item(

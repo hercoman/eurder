@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -31,19 +29,15 @@ public class OrderService {
 
     private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
-    private final ItemGroupRepository itemGroupRepository;
     private final ItemRepository itemRepository;
     private final OrderMapper orderMapper;
-    private final ItemMapper itemMapper;
     private final ItemGroupMapper itemGroupMapper;
 
-    public OrderService(CustomerRepository customerRepository, OrderRepository orderRepository, ItemGroupRepository itemGroupRepository, ItemRepository itemRepository, OrderMapper orderMapper, ItemMapper itemMapper, ItemGroupMapper itemGroupMapper) {
+    public OrderService(CustomerRepository customerRepository, OrderRepository orderRepository, ItemRepository itemRepository, OrderMapper orderMapper, ItemGroupMapper itemGroupMapper) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
-        this.itemGroupRepository = itemGroupRepository;
         this.itemRepository = itemRepository;
         this.orderMapper = orderMapper;
-        this.itemMapper = itemMapper;
         this.itemGroupMapper = itemGroupMapper;
     }
 
