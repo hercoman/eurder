@@ -6,34 +6,39 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "ITEM_GROUP")
 public class ItemGroup {
+    @Transient
     private final Logger itemGroupLogger = LoggerFactory.getLogger(ItemGroup.class);
 
-    private final String id;
-    private final String itemId;
-    private final int amount;
-    private final double pricePerUnit;
-    private final LocalDate shippingDate;
+    @Id
+    private String id;
+    @ManyToOne
+    @JoinColumn(name = "FK_ITEM_ID")
+    private Item item;
+    @Column(name = "AMOUNT")
+    private int amount;
+    @Column(name = "PRICE")
+    private double pricePerUnit;
+    @Column(name = "SHIPPING_DATE")
+    private LocalDate shippingDate;
+
+    public ItemGroup() {
+    }
 
     public ItemGroup(Item item, int amount) {
         this.id = UUID.randomUUID().toString();
-        this.itemId = item.getId();
+        this.item = item;
         this.amount = validateAmount(amount);
         this.pricePerUnit = item.getPrice();
         this.shippingDate = calculateShippingDate(amount, item.getAmountAvailable());
     }
-
-//    public ItemGroup(String itemId, int amount, double pricePerUnit, int amountAvailableInStock) {
-//        this.id = UUID.randomUUID().toString();
-//        this.itemId = itemId;
-//        this.amount = validateAmount(amount);
-//        this.pricePerUnit = pricePerUnit;
-//        this.shippingDate = calculateShippingDate(amount, amountAvailableInStock);
-//    }
 
     private int validateAmount(int amount) {
         if (amount < 0) {
@@ -55,8 +60,8 @@ public class ItemGroup {
         return id;
     }
 
-    public String getItemId() {
-        return itemId;
+    public Item getItem() {
+        return item;
     }
 
     public int getAmount() {
@@ -76,19 +81,19 @@ public class ItemGroup {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemGroup itemGroup = (ItemGroup) o;
-        return amount == itemGroup.amount && Objects.equals(id, itemGroup.id) && Objects.equals(itemId, itemGroup.itemId);
+        return amount == itemGroup.amount && Objects.equals(id, itemGroup.id) && Objects.equals(item, itemGroup.item);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, itemId, amount);
+        return Objects.hash(id, item, amount);
     }
 
     @Override
     public String toString() {
         return "ItemGroup{" +
                 "id='" + id + '\'' +
-                ", itemId='" + itemId + '\'' +
+                ", item='" + item + '\'' +
                 ", amount=" + amount +
                 ", pricePerUnit=" + pricePerUnit +
                 ", shippingDate=" + shippingDate +

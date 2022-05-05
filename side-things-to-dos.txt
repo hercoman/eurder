@@ -1,5 +1,4 @@
-move CalculateShippingDate to ItemGroup class
 remove repository calls from mappers
 
+refactor createOrder method with stream
 add Address class + database
-check for edge case of item group with non existing itemId in createOrder method

@@ -1,25 +1,39 @@
 package com.switchfully.eurderproject.order.domain;
 
 
+import com.switchfully.eurderproject.customer.domain.Customer;
 import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "EURDER")
 public class Order {
+    @Transient
     private final Logger orderLogger = LoggerFactory.getLogger(Order.class);
 
-    private final String id;
-    private final String customerId;
-    private final List<ItemGroup> itemGroupList;
-    private final double totalPrice;
+    @Id
+    private String id;
+    @ManyToOne
+    @JoinColumn(name = "FK_CUSTOMER_ID")
+    private Customer customer;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_EURDER_ID", nullable = false)
+    private List<ItemGroup> itemGroupList;
+    @Column(name = "TOTAL_PRICE")
+    private double totalPrice;
 
-    public Order(String customerId, List<ItemGroup> itemGroupList) {
+    public Order() {
+    }
+
+    public Order(Customer customer, List<ItemGroup> itemGroupList) {
         this.id = UUID.randomUUID().toString();
-        this.customerId = customerId;
+        this.customer = customer;
         this.itemGroupList = itemGroupList;
         this.totalPrice = calculateTotalPrice();
         orderLogger.info("Successfully created new order");
@@ -35,8 +49,8 @@ public class Order {
         return id;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
     public List<ItemGroup> getItemGroupList() {
@@ -52,19 +66,19 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(customerId, order.customerId);
+        return Objects.equals(id, order.id) && Objects.equals(customer, order.customer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId);
+        return Objects.hash(id, customer);
     }
 
     @Override
     public String toString() {
         return "Order{" +
                 "id='" + id + '\'' +
-                ", customerId='" + customerId + '\'' +
+                ", customer='" + customer + '\'' +
                 ", itemGroupDTOList=" + itemGroupList +
                 '}';
     }

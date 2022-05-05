@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -49,15 +50,11 @@ public class OrderService {
     public OrderDTO createOrder(CreateOrderDTO createOrderDTO) {
         assertCustomerExists(createOrderDTO.getCustomerId());
         assertItemsExist(createOrderDTO.getCreateItemGroupDTOList());
-        List<ItemGroup> itemGroupList = new ArrayList<>();
-        for (CreateItemGroupDTO createItemGroupDTO : createOrderDTO.getCreateItemGroupDTOList()) {
-            Item item = itemRepository.getById(createItemGroupDTO.getItemId());
-            ItemGroup itemGroup = itemGroupMapper.toItemGroup(item, createItemGroupDTO.getAmount());
-            itemGroupList.add(itemGroup);
-        }
-        itemGroupList.forEach(itemGroupRepository::save);
-        orderItems(itemGroupList);
-        Order order = new Order(customerRepository.getById(createOrderDTO.getCustomerId()).getId(), itemGroupList);
+        List<ItemGroup> newItemGroupList = createOrderDTO.getCreateItemGroupDTOList().stream()
+                .map(createItemGroupDTO -> itemGroupMapper.toItemGroup(itemRepository.getById(createItemGroupDTO.getItemId()), createItemGroupDTO.getAmount()))
+                .toList();
+        orderItems(newItemGroupList);
+        Order order = orderMapper.toOrder(customerRepository.getById(createOrderDTO.getCustomerId()), newItemGroupList);
         orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
@@ -81,7 +78,7 @@ public class OrderService {
 
     private void orderItems(List<ItemGroup> itemGroupList) {
         for (ItemGroup itemGroup : itemGroupList) {
-            Item orderedItem = itemRepository.getById(itemGroup.getItemId());
+            Item orderedItem = itemRepository.getById(itemGroup.getItem().getId());
             if (orderedItem.getAmountAvailable() >= itemGroup.getAmount()) {
                 orderedItem.changeAmountAvailable(orderedItem.getAmountAvailable() - itemGroup.getAmount());
                 // OK TO THROW EXCEPTION?
