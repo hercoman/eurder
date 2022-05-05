@@ -1,5 +1,6 @@
 package com.switchfully.eurderproject.item_group.service;
 
+import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
 import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item_group.api.dto.ItemGroupDTO;
@@ -20,13 +21,18 @@ public class ItemGroupMapper {
         this.itemRepository = itemRepository;
     }
 
-    public ItemGroup toItemGroup(CreateItemGroupDTO createItemGroupDTO, double pricePerUnit, int amountAvailableInStock) {
-        return new ItemGroup(
-                createItemGroupDTO.getItemId(),
-                createItemGroupDTO.getAmount(),
-                pricePerUnit,
-                amountAvailableInStock);
+    public ItemGroup toItemGroup(Item item, int amount) {
+        return new ItemGroup(item, amount);
     }
+
+//    public ItemGroup toItemGroup(CreateItemGroupDTO createItemGroupDTO, double pricePerUnit, int amountAvailableInStock) {
+//        return new ItemGroup(
+
+//                createItemGroupDTO.getItemId(),
+//                createItemGroupDTO.getAmount(),
+//                pricePerUnit,
+//                amountAvailableInStock);
+//    }
 
     public ItemGroupDTO toItemGroupDTO(ItemGroup itemGroup) {
         return new ItemGroupDTO()

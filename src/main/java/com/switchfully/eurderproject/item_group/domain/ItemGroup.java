@@ -1,5 +1,6 @@
 package com.switchfully.eurderproject.item_group.domain;
 
+import com.switchfully.eurderproject.item.domain.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,21 @@ public class ItemGroup {
     private final double pricePerUnit;
     private final LocalDate shippingDate;
 
-    public ItemGroup(String itemId, int amount, double pricePerUnit, int amountAvailableInStock) {
+    public ItemGroup(Item item, int amount) {
         this.id = UUID.randomUUID().toString();
-        this.itemId = itemId;
+        this.itemId = item.getId();
         this.amount = validateAmount(amount);
-        this.pricePerUnit = pricePerUnit;
-        this.shippingDate = calculateShippingDate(amount, amountAvailableInStock);
+        this.pricePerUnit = item.getPrice();
+        this.shippingDate = calculateShippingDate(amount, item.getAmountAvailable());
     }
+
+//    public ItemGroup(String itemId, int amount, double pricePerUnit, int amountAvailableInStock) {
+//        this.id = UUID.randomUUID().toString();
+//        this.itemId = itemId;
+//        this.amount = validateAmount(amount);
+//        this.pricePerUnit = pricePerUnit;
+//        this.shippingDate = calculateShippingDate(amount, amountAvailableInStock);
+//    }
 
     private int validateAmount(int amount) {
         if (amount < 0) {

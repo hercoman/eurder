@@ -3,6 +3,7 @@ package com.switchfully.eurderproject.order.service;
 import com.switchfully.eurderproject.customer.domain.CustomerRepository;
 import com.switchfully.eurderproject.item.domain.Item;
 import com.switchfully.eurderproject.item.domain.ItemRepository;
+import com.switchfully.eurderproject.item.service.ItemMapper;
 import com.switchfully.eurderproject.item_group.api.dto.CreateItemGroupDTO;
 import com.switchfully.eurderproject.item_group.domain.ItemGroup;
 import com.switchfully.eurderproject.item_group.domain.ItemGroupRepository;
@@ -32,14 +33,16 @@ public class OrderService {
     private final ItemGroupRepository itemGroupRepository;
     private final ItemRepository itemRepository;
     private final OrderMapper orderMapper;
+    private final ItemMapper itemMapper;
     private final ItemGroupMapper itemGroupMapper;
 
-    public OrderService(CustomerRepository customerRepository, OrderRepository orderRepository, ItemGroupRepository itemGroupRepository, ItemRepository itemRepository, OrderMapper orderMapper, ItemGroupMapper itemGroupMapper) {
+    public OrderService(CustomerRepository customerRepository, OrderRepository orderRepository, ItemGroupRepository itemGroupRepository, ItemRepository itemRepository, OrderMapper orderMapper, ItemMapper itemMapper, ItemGroupMapper itemGroupMapper) {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.itemGroupRepository = itemGroupRepository;
         this.itemRepository = itemRepository;
         this.orderMapper = orderMapper;
+        this.itemMapper = itemMapper;
         this.itemGroupMapper = itemGroupMapper;
     }
 
@@ -48,9 +51,8 @@ public class OrderService {
         assertItemsExist(createOrderDTO.getCreateItemGroupDTOList());
         List<ItemGroup> itemGroupList = new ArrayList<>();
         for (CreateItemGroupDTO createItemGroupDTO : createOrderDTO.getCreateItemGroupDTOList()) {
-            double pricePerUnit = itemRepository.getById(createItemGroupDTO.getItemId()).getPrice();
-            int amountAvailable = itemRepository.getById(createItemGroupDTO.getItemId()).getAmountAvailable();
-            ItemGroup itemGroup = itemGroupMapper.toItemGroup(createItemGroupDTO, pricePerUnit, amountAvailable);
+            Item item = itemRepository.getById(createItemGroupDTO.getItemId());
+            ItemGroup itemGroup = itemGroupMapper.toItemGroup(item, createItemGroupDTO.getAmount());
             itemGroupList.add(itemGroup);
         }
         itemGroupList.forEach(itemGroupRepository::save);

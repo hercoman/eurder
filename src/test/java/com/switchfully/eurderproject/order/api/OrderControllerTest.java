@@ -109,13 +109,44 @@ class OrderControllerTest {
     @Test
     void createOrder_givenOrderWithMultipleItems_thenOrderPriceCalculatedCorrectly() {
         // GIVEN
-        List<ItemGroup> itemGroupList = Lists.newArrayList(
-                new ItemGroup(TEST_ITEM_ID1, 5, 0.125, 10),
-                new ItemGroup(TEST_ITEM_ID2, 7, 0.14, 30));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Basic SGVyYmVydDpTd2l0Y2gx");
+        // GIVEN
 
-        Order order = new Order(TEST_CUSTOMER_ID, itemGroupList);
+        CreateItemGroupDTO createItemGroupDTO1 = new CreateItemGroupDTO()
+                .setItemId(TEST_ITEM_ID1)
+                .setAmount(5);
+        CreateItemGroupDTO createItemGroupDTO2 = new CreateItemGroupDTO()
+                .setItemId(TEST_ITEM_ID2)
+                .setAmount(7);
 
-        Assertions.assertThat(order.getTotalPrice()).isEqualTo(1.605);
+        List<CreateItemGroupDTO> createItemGroupDTOList = Lists.newArrayList(createItemGroupDTO1, createItemGroupDTO2);
+
+        // WHEN
+        CreateOrderDTO createOrderDTO = new CreateOrderDTO()
+                .setCustomerId(TEST_CUSTOMER_ID)
+                .setCreateItemGroupDTOList(createItemGroupDTOList);
+
+        OrderDTO orderDTO =
+                RestAssured
+                        .given()
+                        .port(port)
+                        .body(createOrderDTO)
+                        .contentType(JSON)
+                        .when()
+                        .accept(JSON)
+                        .headers(httpHeaders)
+                        .post("/orders")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.CREATED.value())
+                        .extract()
+                        .as(OrderDTO.class);
+
+        // THEN
+        Assertions.assertThat(orderDTO.getTotalPrice()).isEqualTo(1.605);
+
+
 
     }
 
