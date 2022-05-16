@@ -73,11 +73,8 @@ public class OrderService {
     private void orderItems(List<ItemGroup> itemGroupList) {
         for (ItemGroup itemGroup : itemGroupList) {
             Item orderedItem = itemRepository.getById(itemGroup.getItem().getId());
-            if (orderedItem.getAmountAvailable() >= itemGroup.getAmount()) {
-                orderedItem.changeAmountAvailable(orderedItem.getAmountAvailable() - itemGroup.getAmount());
-                // OK TO THROW EXCEPTION?
-                itemRepository.save(orderedItem);
-            }
+            orderedItem.changeAmountAvailable(orderedItem.getAmountAvailable() - itemGroup.getAmount());
+            itemRepository.save(orderedItem);
         }
     }
 
